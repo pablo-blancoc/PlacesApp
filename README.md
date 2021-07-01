@@ -74,10 +74,10 @@ This apps allows you to save restaurants, coffee-shops, and more in your own per
 
 * Internal navigation (Where each screen can take you)
     * Login
-        * Register
-        * Home
-    * Register
-        * Login
+        * Sign up
+	* Sign in
+    * Sign up
+        * Internal signup
     * Home
         * Detail
         * Profile
@@ -86,10 +86,13 @@ This apps allows you to save restaurants, coffee-shops, and more in your own per
         * Call if has phone
     * Liked
         * Detail
+	* Unlike
     * Saved
         * Detail
+	* Delete or edit
     * Profile
         * Detail
     * Create place 
-        * Home
+        * Fill information and create a place
+ 
 
