@@ -1,15 +1,14 @@
 # FBU App: Places
 
 ## Table of Contents
-1. [Overview](#Overview)
-    a. [Description](#Description)
-    b. [App Evaluation](#App-Evaluation)
-3. [Product Spec](#Product-Spec)
-    a. [User Stories](#User-Stories)
-    b. [Requirements](#Basic-Requirements)
-    c. [Screen Archetypes](#Screen-Archetypes)
-    d. [Navigation](#Navigation)
-
+1. [Overview](#overview)
+    * [Description](#description)
+    * [App Evaluation](#app-evaluation)
+2. [Product Spec](#product-spec)
+    * [User Stories](#user-stories)
+    * [Requirements](#basic-requirements)
+    * [Screen Archetypes](#screen-archetypes)
+    * [Navigation](#navigation)
 
 ## Overview
 
