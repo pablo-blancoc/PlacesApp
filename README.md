@@ -9,6 +9,7 @@
     * [Requirements](#basic-requirements)
     * [Screen Archetypes](#screen-archetypes)
     * [Navigation](#navigation)
+    * [Wireframes](#wireframes)
 
 ## Overview
 
@@ -42,9 +43,8 @@ This apps allows you to save restaurants, coffee-shops, and more in your own per
 * Get notifications whenever people you decide post new things
 
 ### Basic Requirements
-- SQL Database
-- Backend server (own API)
-- Google Maps SDK or API to find directions
+- Parse as database and backend
+- Google Maps SDK or API to find directions and near me
 
 ### Screen Archetypes
 * Login 
@@ -95,4 +95,5 @@ This apps allows you to save restaurants, coffee-shops, and more in your own per
     * Create place 
         * Fill information and create a place
  
-
+### Wireframes
+![Wireframes image](https://www.github.com/pablo-blancoc/)
