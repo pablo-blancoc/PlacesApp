@@ -10,6 +10,7 @@
     * [Screen Archetypes](#screen-archetypes)
     * [Navigation](#navigation)
     * [Wireframes](#wireframes)
+    * [Schema](#schema)
 
 ## Overview
 
@@ -97,3 +98,6 @@ This apps allows you to save restaurants, coffee-shops, and more in your own per
  
 ### Wireframes
 ![Wireframes image](https://github.com/pablo-blancoc/PlacesApp/blob/main/files/wireframes.png)
+ 
+### Schema
+![Schema image](https://github.com/pablo-blancoc/PlacesApp/blob/main/files/schema.png)
