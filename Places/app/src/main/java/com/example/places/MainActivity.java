@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if( id == R.id.createPlace ) {
             // Create a place
+            Intent intent = new Intent(this, CreatePlace.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
