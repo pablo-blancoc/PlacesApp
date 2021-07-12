@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.maps.SupportMapFragment;
 
 public class WorkaroundMapFragment extends SupportMapFragment {
@@ -20,10 +22,9 @@ public class WorkaroundMapFragment extends SupportMapFragment {
 
         TouchableWrapper frameLayout = new TouchableWrapper(getActivity());
 
-        frameLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        frameLayout.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), android.R.color.transparent));
 
-        ((ViewGroup) layout).addView(frameLayout,
-                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ((ViewGroup) layout).addView(frameLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         return layout;
     }
@@ -46,8 +47,6 @@ public class WorkaroundMapFragment extends SupportMapFragment {
         public boolean dispatchTouchEvent(MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    mListener.onTouch();
-                    break;
                 case MotionEvent.ACTION_UP:
                     mListener.onTouch();
                     break;

@@ -34,6 +34,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -51,6 +53,7 @@ public class CreatePlace extends AppCompatActivity {
     ActivityCreatePlaceBinding binding;
     private SupportMapFragment mapFragment;
     private GoogleMap map;
+    LatLng latlng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +79,17 @@ public class CreatePlace extends AppCompatActivity {
 
     /**
      * Loads the map
+     * Uses the special class WorkaroundMapFragment to intercept any touchEvent from
+     *  ScrollView so that when touching the map the screen stays the same.
      * @param googleMap: the map from the layout
      */
     protected void loadMap(GoogleMap googleMap) {
         this.map = googleMap;
+        if (this.map == null) {
+            Toast.makeText(this, "Error loading map", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         this.map.getUiSettings().setZoomControlsEnabled(true);
         ScrollView mScrollView = findViewById(R.id.scrollView); //parent scrollview in xml, give your scrollview id value
         ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
@@ -90,9 +100,21 @@ public class CreatePlace extends AppCompatActivity {
                         mScrollView.requestDisallowInterceptTouchEvent(true);
                     }
                 });
-        if (this.map == null) {
-            Toast.makeText(this, "Error loading map", Toast.LENGTH_SHORT).show();
-        }
+
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng position) {
+                if( latlng != null ) {
+                    return;
+                }
+
+                latlng = position;
+                map.addMarker(new MarkerOptions()
+                        .position(position)
+                .draggable(true));
+
+            }
+        });
     }
 
 
