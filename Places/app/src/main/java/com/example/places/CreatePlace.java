@@ -53,11 +53,11 @@ public class CreatePlace extends AppCompatActivity {
     private final static String KEY_LOCATION = "location";
 
     // Attributes
-    ActivityCreatePlaceBinding binding;
+    private ActivityCreatePlaceBinding binding;
     private SupportMapFragment mapFragment;
     private GoogleMap map;
-    PermissionsDispatcher dispatcher;
-    Boolean addedMarker = false;
+    private PermissionsDispatcher dispatcher;
+    private Boolean addedMarker = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class CreatePlace extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if(dispatcher != null) {
-            dispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+            dispatcher.onRequestPermissionsResult(requestCode, grantResults);
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
@@ -131,6 +131,8 @@ public class CreatePlace extends AppCompatActivity {
      * Loads the map
      * Uses the special class WorkaroundMapFragment to intercept any touchEvent from
      *  ScrollView so that when touching the map the screen stays the same.
+     *  Also creates an instance of PermissionDispatcher to update the map on the user's current
+     *  location regularly in the background of the app
      * @param googleMap: the map from the layout
      */
     protected void loadMap(GoogleMap googleMap) {
@@ -140,7 +142,7 @@ public class CreatePlace extends AppCompatActivity {
             return;
         }
 
-        // Setup PermissionsDispatcher to get current location and start updating
+        // Setup PermissionsDispatcher to get current location and start updating the map
         dispatcher = new PermissionsDispatcher(map, CreatePlace.this);
         dispatcher.getMyLocationWithPermissionCheck(CreatePlace.this);
         dispatcher.startLocationUpdatesWithPermissionCheck(CreatePlace.this);

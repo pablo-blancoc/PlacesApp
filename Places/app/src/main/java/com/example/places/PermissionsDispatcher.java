@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -116,6 +117,10 @@ final class PermissionsDispatcher extends AppCompatActivity {
                 Looper.myLooper());
     }
 
+    /**
+     * Get the user location checking for the pertinent permissions
+     * @param activity: The activity it was called from
+     */
     void getMyLocationWithPermissionCheck(@NonNull Activity activity) {
         if (PermissionUtils.hasSelfPermissions(activity, PERMISSION_GETMYLOCATION)) {
             getMyLocation();
@@ -124,15 +129,25 @@ final class PermissionsDispatcher extends AppCompatActivity {
         }
     }
 
-    void startLocationUpdatesWithPermissionCheck(@NonNull Activity target) {
-        if (PermissionUtils.hasSelfPermissions(target, PERMISSION_STARTLOCATIONUPDATES)) {
+    /**
+     * Starts updating the location on the map regularly checking the pertinent permissions
+     * @param activity: the activity it was called from
+     */
+    void startLocationUpdatesWithPermissionCheck(@NonNull Activity activity) {
+        if (PermissionUtils.hasSelfPermissions(activity, PERMISSION_STARTLOCATIONUPDATES)) {
             startLocationUpdates();
         } else {
-            ActivityCompat.requestPermissions(target, PERMISSION_STARTLOCATIONUPDATES, REQUEST_STARTLOCATIONUPDATES);
+            ActivityCompat.requestPermissions(activity, PERMISSION_STARTLOCATIONUPDATES, REQUEST_STARTLOCATIONUPDATES);
         }
     }
 
-    void onRequestPermissionsResult(@NonNull Activity target, int requestCode, int[] grantResults) {
+    /**
+     * It is called from main thread with the results of the permission check so that the actions
+     *  to listen to the location start accordingly, if allowed by the user
+     * @param requestCode: the requestCode returned from the requestPermission action
+     * @param grantResults: the permissions that where granted by the user
+     */
+    void onRequestPermissionsResult(int requestCode, int[] grantResults) {
         switch (requestCode) {
             case REQUEST_GETMYLOCATION:
                 if (PermissionUtils.verifyPermissions(grantResults)) {
@@ -149,18 +164,28 @@ final class PermissionsDispatcher extends AppCompatActivity {
         }
     }
 
-    public void onLocationChanged(Location location) {
+    /**
+     * Updates the map locations everytime a new locations is received. Checks if the location is
+     *  not null (which may mean the GPS may be turned off)
+     * This method is necessary to leave the one that updates the location without parameters
+     *  so that it can be called from other classes
+     * @param location: the location received
+     */
+    private void onLocationChanged(Location location) {
         // GPS may be turned off
         if (location == null) {
+            Toast.makeText(context, "The GPS may be turned off", Toast.LENGTH_SHORT).show();
             return;
         }
 
         mCurrentLocation = location;
-        String msg = "Updated Location: " + Double.toString(location.getLatitude()) + "," + Double.toString(location.getLongitude());
-        Log.d(TAG, msg);
         displayLocation();
     }
 
+    /**
+     * Displays the location on the map that was received when the class was instantiated. This is
+     *  the actual function that updates the maps location
+     */
     public void displayLocation() {
         if (mCurrentLocation != null) {
             LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
