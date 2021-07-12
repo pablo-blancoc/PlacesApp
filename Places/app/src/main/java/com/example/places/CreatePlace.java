@@ -39,6 +39,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.PermissionUtils;
 
@@ -48,12 +50,14 @@ public class CreatePlace extends AppCompatActivity {
 
     // Constants
     private final static String TAG = "CreatePlace";
+    private final static String KEY_LOCATION = "location";
 
     // Attributes
     ActivityCreatePlaceBinding binding;
     private SupportMapFragment mapFragment;
     private GoogleMap map;
-    LatLng latlng;
+    PermissionsDispatcher dispatcher;
+    Boolean addedMarker = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,12 @@ public class CreatePlace extends AppCompatActivity {
         binding = ActivityCreatePlaceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Setup map
+        // Since KEY_LOCATION was found in the Bundle, we can be sure that there was a last location saved
+        if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION) && dispatcher != null) {
+            dispatcher.mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+        }
+
+        // Setup map with WorkaroundFragment so that drag & move still work
         mapFragment = ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         if (mapFragment != null) {
             mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -74,6 +83,47 @@ public class CreatePlace extends AppCompatActivity {
             });
         } else {
             Toast.makeText(this, "Error loading map", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * When the app stops (by any reason) this method is called to preserve instances
+     *  Location is preserved
+     * @param savedInstanceState: The instance to be saved
+     */
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle savedInstanceState) {
+        if(dispatcher != null) {
+            savedInstanceState.putParcelable(KEY_LOCATION, dispatcher.mCurrentLocation);
+        }
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    /**
+     *  A permission request was made to the user, such like the "Access this device location"
+     *      and it enters this function when the result is given
+     * @param requestCode: The code of the request made
+     * @param permissions: The permission requested
+     * @param grantResults: The permissions granted
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(dispatcher != null) {
+            dispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
+     * When an activity stops and then resumes, this method is called to reestablish information
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(dispatcher != null) {
+            dispatcher.displayLocation();
+            dispatcher.startLocationUpdatesWithPermissionCheck(this);
         }
     }
 
@@ -90,28 +140,33 @@ public class CreatePlace extends AppCompatActivity {
             return;
         }
 
-        this.map.getUiSettings().setZoomControlsEnabled(true);
-        ScrollView mScrollView = findViewById(R.id.scrollView); //parent scrollview in xml, give your scrollview id value
+        // Setup PermissionsDispatcher to get current location and start updating
+        dispatcher = new PermissionsDispatcher(map, CreatePlace.this);
+        dispatcher.getMyLocationWithPermissionCheck(CreatePlace.this);
+        dispatcher.startLocationUpdatesWithPermissionCheck(CreatePlace.this);
+
+        // Set map settings, and create listener to intercept clicks so that map is able to move
+        this.map.getUiSettings().setZoomControlsEnabled(false);
         ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .setListener(new WorkaroundMapFragment.OnTouchListener() {
                     @Override
-                    public void onTouch()
-                    {
-                        mScrollView.requestDisallowInterceptTouchEvent(true);
+                    public void onTouch() {
+                        binding.scrollView.requestDisallowInterceptTouchEvent(true);
                     }
                 });
 
+        // Set map onLongClickListener to place a marker on it
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng position) {
-                if( latlng != null ) {
+                if(addedMarker) {
                     return;
                 }
 
-                latlng = position;
+                addedMarker = true;
                 map.addMarker(new MarkerOptions()
                         .position(position)
-                .draggable(true));
+                        .draggable(true));
 
             }
         });
