@@ -10,4 +10,8 @@
     <string name="create_a_place">Create a place</string>
     <string name="loading">loading...</string>
     <string name="logout">Log out</string>
+    <string name="title_liked">Liked</string>
+    <string name="title_search">Search</string>
+    <string name="title_recommend">Recommend</string>
+    <string name="title_profile">Profile</string>
 </resources>

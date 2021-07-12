@@ -10,16 +10,25 @@
         android:name="com.example.places.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
-
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.places.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
+        android:id="@+id/navigation_liked"
+        android:name="com.example.places.ui.liked.LikedFragment"
+        android:label="@string/title_liked"
+        tools:layout="@layout/liked_fragment" />
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.places.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_search"
+        android:name="com.example.places.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/search_fragment" />
+    <fragment
+        android:id="@+id/navigation_recommend"
+        android:name="com.example.places.ui.recommend.RecommendFragment"
+        android:label="@string/title_recommend"
+        tools:layout="@layout/recommend_fragment" />
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.places.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/profile_fragment" />
+
 </navigation>
