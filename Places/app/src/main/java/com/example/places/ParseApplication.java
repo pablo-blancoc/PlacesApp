@@ -2,13 +2,19 @@ package com.example.places;
 
 import android.app.Application;
 
+import com.example.places.models.User;
 import com.parse.Parse;
+import com.parse.ParseObject;
 
 public class ParseApplication extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Declare Parse subclasses
+        ParseObject.registerSubclass(User.class);
+
 
         // Initialize Parse
         Parse.initialize(new Parse.Configuration.Builder(this)
