@@ -2,6 +2,7 @@ package com.example.places;
 
 import android.app.Application;
 
+import com.example.places.models.Place;
 import com.example.places.models.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -14,7 +15,7 @@ public class ParseApplication extends Application {
 
         // Declare Parse subclasses
         ParseObject.registerSubclass(User.class);
-
+        ParseObject.registerSubclass(Place.class);
 
         // Initialize Parse
         Parse.initialize(new Parse.Configuration.Builder(this)

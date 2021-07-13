@@ -132,6 +132,14 @@ public class CreatePlace extends AppCompatActivity {
         } else {
             requestCameraPermission();
         }
+
+        // listener to post a place
+        binding.btnPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     /**
