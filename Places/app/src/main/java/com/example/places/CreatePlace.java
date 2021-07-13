@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.example.places.databinding.ActivityCreatePlaceBinding;
 import com.example.places.databinding.ActivityLoginBinding;
 import com.example.places.databinding.ActivityMainBinding;
+import com.example.places.models.Place;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -52,8 +53,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -86,6 +89,8 @@ public class CreatePlace extends AppCompatActivity {
     private File outputDirectory;
     private ExecutorService cameraExecutor;
     private ParseObject category;
+    File image;
+    Marker placeLocation;
     private boolean sharePost = true;
 
     @Override
@@ -137,7 +142,35 @@ public class CreatePlace extends AppCompatActivity {
         binding.btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(binding.etDescription.getText().toString().isEmpty()) {
+                    Toast.makeText(CreatePlace.this, "Description can't be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(!addedMarker) {
+                    Toast.makeText(CreatePlace.this, "A marker hasn't been created", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(!(binding.rbPrice.getRating() > 0)) {
+                    Toast.makeText(CreatePlace.this, "Price hasn't been set", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(binding.etAddress.getText().toString().isEmpty()) {
+                    Toast.makeText(CreatePlace.this, "Address can't be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(category == null) {
+                    Toast.makeText(CreatePlace.this, "You need to select a category", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(binding.etName.getText().toString().isEmpty()) {
+                    Toast.makeText(CreatePlace.this, "Place's name cannot be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(image == null || binding.ivImage.getDrawable() == null) {
+                    Toast.makeText(CreatePlace.this, "You need to take an image", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                post();
             }
         });
     }
@@ -230,13 +263,14 @@ public class CreatePlace extends AppCompatActivity {
                 }
 
                 addedMarker = true;
-                map.addMarker(new MarkerOptions()
+                placeLocation = map.addMarker(new MarkerOptions()
                         .position(position)
                         .draggable(true));
 
             }
         });
     }
+
 
     /**
      * Returns whether the user has granted access to use the camera
@@ -279,11 +313,11 @@ public class CreatePlace extends AppCompatActivity {
                 binding.ivImage.setVisibility(View.VISIBLE);
 
                 // Save image into File variable
-                File image = new File(savedUri.getPath());
+                image = new File(savedUri.getPath());
 
                 // Load image with Glide
                 Glide.with(CreatePlace.this)
-                        .load(new File(savedUri.getPath()))
+                        .load(image)
                         .into(binding.ivImage);
             }
 
@@ -403,6 +437,45 @@ public class CreatePlace extends AppCompatActivity {
                 } else {
                     // The toggle is disabled
                     sharePost = false;
+                }
+            }
+        });
+    }
+
+    /**
+     * This functions creates a Place and uploads it into Parse server
+     */
+    private void post() {
+        // Set loading spinner
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.btnPost.setVisibility(View.GONE);
+
+        // Create place
+        Place place = new Place();
+        place.setLikeCount(0);
+        place.setDescription(binding.etDescription.getText().toString());
+        place.setPrice((int) binding.rbPrice.getRating());
+        place.setLat(placeLocation.getPosition().latitude);
+        place.setLng(placeLocation.getPosition().longitude);
+        place.setAddress(binding.etAddress.getText().toString());
+        place.setPublic(this.sharePost);
+        place.setPhone(binding.etPhoneNumber.getText().toString());
+        place.setCategory(this.category);
+        place.setName(binding.etName.getText().toString());
+        place.setImage(new ParseFile(image));
+
+        // Save place
+        place.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                binding.loading.setVisibility(View.GONE);
+                binding.btnPost.setVisibility(View.VISIBLE);
+                if(e == null) {
+                    Toast.makeText(CreatePlace.this, "Nice place!", Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(CreatePlace.this, "Error occurred while posting place", Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Error while posting place", e);
                 }
             }
         });

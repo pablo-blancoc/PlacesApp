@@ -255,6 +255,7 @@
             android:textAllCaps="true"
             android:layout_below="@id/rgCategories"
             android:text="@string/share_with_the_world"
+            android:checked="true"
             android:textStyle="bold" />
 
         <Button
@@ -268,6 +269,15 @@
             android:text="@string/create_place"
             android:textStyle="bold"
             android:textSize="18sp"/>
+
+        <ProgressBar
+            android:id="@+id/loading"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/swPublic"
+            android:visibility="gone"
+            android:indeterminateTint="@color/primary"/>
 
     </RelativeLayout>
 </ScrollView>
