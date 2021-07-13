@@ -21,6 +21,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -85,6 +86,7 @@ public class CreatePlace extends AppCompatActivity {
     private File outputDirectory;
     private ExecutorService cameraExecutor;
     private ParseObject category;
+    private boolean sharePost = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -381,6 +383,18 @@ public class CreatePlace extends AppCompatActivity {
                 } else {
                     Toast.makeText(CreatePlace.this, "Error while selecting category", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Error while selecting category", e);
+                }
+            }
+        });
+
+        binding.swPublic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                    sharePost = true;
+                } else {
+                    // The toggle is disabled
+                    sharePost = false;
                 }
             }
         });

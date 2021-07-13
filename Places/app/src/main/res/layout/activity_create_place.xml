@@ -15,9 +15,22 @@
         android:padding="10dp">
 
         <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/create_a_new_place"
+            android:layout_marginVertical="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAllCaps="true"
+            android:textSize="24sp"/>
+
+        <TextView
             android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/title"
             android:text="@string/name"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -233,6 +246,28 @@
                 android:text="@string/japanese"
                 android:onClick="onRadioButtonClicked"/>
         </RadioGroup>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/swPublic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:textAllCaps="true"
+            android:layout_below="@id/rgCategories"
+            android:text="@string/share_with_the_world"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_below="@id/swPublic"
+            android:backgroundTint="@color/primary"
+            android:textAllCaps="true"
+            android:text="@string/create_place"
+            android:textStyle="bold"
+            android:textSize="18sp"/>
 
     </RelativeLayout>
 </ScrollView>
