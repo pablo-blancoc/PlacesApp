@@ -175,5 +175,64 @@
             android:textAllCaps="true"
             android:text="@string/take_picture" />
 
+        <TextView
+            android:id="@+id/tvAICategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_below="@id/btnImage"
+            android:gravity="center"
+            tools:text="Our AI recommends FAST FOOD category"
+            android:visibility="gone"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tvCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/choose_a_category"
+            android:layout_below="@id/tvAICategories"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+
+        <RadioGroup
+            android:id="@+id/rgCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/tvCategories" >
+            <RadioButton android:id="@+id/radio_fast_food"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fast_food"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/radio_italian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/italian"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/radio_drinks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/drinks"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/radio_coffee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/coffee"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/radio_japanese"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/japanese"
+                android:onClick="onRadioButtonClicked"/>
+        </RadioGroup>
+
     </RelativeLayout>
 </ScrollView>

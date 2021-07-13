@@ -21,6 +21,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -48,6 +49,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -76,9 +81,10 @@ public class CreatePlace extends AppCompatActivity {
     private GoogleMap map;
     private PermissionsDispatcher dispatcher;
     private Boolean addedMarker = false;
-    ImageCapture imageCapture;
-    File outputDirectory;
-    ExecutorService cameraExecutor;
+    private ImageCapture imageCapture;
+    private File outputDirectory;
+    private ExecutorService cameraExecutor;
+    private ParseObject category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -333,6 +339,51 @@ public class CreatePlace extends AppCompatActivity {
             return mediaDirs;
         } else
             return getFilesDir();
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Create query to get category
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Category");
+        String objectId = "";
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radio_japanese:
+                if (checked)
+                    objectId = "c3tgKGq7PB";
+                    break;
+            case R.id.radio_italian:
+                if (checked)
+                    objectId = "vXScNFQ7I1";
+                    break;
+            case R.id.radio_drinks:
+                if (checked)
+                    objectId = "cESIVJdndh";
+                    break;
+            case R.id.radio_coffee:
+                if (checked)
+                    objectId = "xiaCOmzklb";
+                    break;
+            case R.id.radio_fast_food:
+                if (checked)
+                    objectId = "HrfhIk7otS";
+                    break;
+        }
+
+        query.getInBackground(objectId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e == null) {
+                    category = object;
+                } else {
+                    Toast.makeText(CreatePlace.this, "Error while selecting category", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error while selecting category", e);
+                }
+            }
+        });
     }
 
 }
