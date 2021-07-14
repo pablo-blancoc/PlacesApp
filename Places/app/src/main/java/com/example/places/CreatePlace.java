@@ -394,7 +394,9 @@ public class CreatePlace extends AppCompatActivity {
 
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
+        if (!((RadioButton) view).isChecked()) {
+            return;
+        }
 
         // Create query to get category
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Category");
@@ -403,23 +405,18 @@ public class CreatePlace extends AppCompatActivity {
         // Check which radio button was clicked
         switch(view.getId()) {
             case R.id.radio_japanese:
-                if (checked)
                     objectId = "c3tgKGq7PB";
                     break;
             case R.id.radio_italian:
-                if (checked)
                     objectId = "vXScNFQ7I1";
                     break;
             case R.id.radio_drinks:
-                if (checked)
                     objectId = "cESIVJdndh";
                     break;
             case R.id.radio_coffee:
-                if (checked)
                     objectId = "xiaCOmzklb";
                     break;
             case R.id.radio_fast_food:
-                if (checked)
                     objectId = "HrfhIk7otS";
                     break;
         }
