@@ -14,9 +14,12 @@ import androidx.fragment.app.DialogFragment;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
@@ -60,7 +63,11 @@ import com.parse.SaveCallback;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -462,6 +469,11 @@ public class CreatePlace extends AppCompatActivity {
         place.setPhone(binding.etPhoneNumber.getText().toString());
         place.setCategory(this.category);
         place.setName(binding.etName.getText().toString());
+
+        // Reduce image size and add it into the place
+        Bitmap fillSizeBitmap = BitmapFactory.decodeFile(image.toPath().toString());
+        Bitmap reducedBitmap = ImageResizer.reduceBitmapSize(fillSizeBitmap, 480000); // Reduce to 600x400 pixels
+        image = getBitmapFile(reducedBitmap);
         place.setImage(new ParseFile(image));
 
         // Save place
@@ -479,6 +491,31 @@ public class CreatePlace extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * Get File from Bitmap and return it
+     * @param reducedBitmap: the bitmap to convert to file
+     */
+    private File getBitmapFile(Bitmap reducedBitmap) {
+        File file = new File(outputDirectory, new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US).format(System.currentTimeMillis()) + ".jpg");
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        reducedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        byte[] bitmapData = bos.toByteArray();
+
+        try {
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(bitmapData);
+            fos.flush();
+            fos.close();
+            return file;
+        } catch (IOException e) {
+            Log.e(TAG, "Error while reducing image and converting it to file", e);
+            e.printStackTrace();
+        }
+
+        return file;
     }
 
 }
