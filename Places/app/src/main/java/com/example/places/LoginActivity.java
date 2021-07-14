@@ -14,7 +14,9 @@ import android.widget.Toast;
 import com.example.places.databinding.ActivityLoginBinding;
 import com.example.places.models.User;
 import com.parse.LogInCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -80,6 +82,13 @@ public class LoginActivity extends AppCompatActivity {
                 finishLoading();
 
                 if( e == null ) {
+                    // Create relations object for user
+                    ParseObject object = new ParseObject("Relations");
+                    object.put("user", ParseUser.getCurrentUser());
+                    object.put("followerCount", 0);
+                    object.put("followingCount", 0);
+                    object.saveInBackground();
+
                     // Logged in
                     String text = String.format("Welcome, %s!", user.getUsername());
                     Toast.makeText(LoginActivity.this, text, Toast.LENGTH_SHORT).show();

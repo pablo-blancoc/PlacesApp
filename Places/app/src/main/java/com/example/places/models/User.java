@@ -10,9 +10,10 @@ public class User extends ParseUser {
     // Constants
     public static final String KEY_PROFILE_PICTURE = "profilePicture";
     public static final String KEY_BIO = "bio";
-    public static final String KEY_FOLLOWERS = "followersCount";
-    public static final String KEY_FOLLOWING = "followingCount";
     public static final String KEY_NAME = "name";
+
+    // Attributes
+    public boolean following;
 
     public ParseFile getProfilePicture() {
         return getParseFile(KEY_PROFILE_PICTURE);
@@ -28,22 +29,6 @@ public class User extends ParseUser {
 
     public void setBio(String bio) {
         put(KEY_BIO, bio);
-    }
-
-    public int getFollowersCount() {
-        return getInt(KEY_FOLLOWERS);
-    }
-
-    public void setFollowersCount(int followers) {
-        put(KEY_FOLLOWERS, followers);
-    }
-
-    public int getFollowingCount() {
-        return getInt(KEY_FOLLOWING);
-    }
-
-    public void setFollowingCount(int followers) {
-        put(KEY_FOLLOWING, followers);
     }
 
     public String getName() {

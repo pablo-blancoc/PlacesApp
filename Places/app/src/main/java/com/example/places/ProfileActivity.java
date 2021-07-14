@@ -16,9 +16,12 @@ import com.example.places.models.Place;
 import com.example.places.models.User;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     ActivityProfileBinding binding;
     List<Place> places;
     ProfilePlacesAdapter adapter;
+    int followerCount = 0, followingCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,96 @@ public class ProfileActivity extends AppCompatActivity {
         this.binding.rvPlaces.setAdapter(this.adapter);
         this.binding.rvPlaces.setLayoutManager(new GridLayoutManager(this, 3));
 
+        // Follow clickListener
+        this.binding.btnFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, String.valueOf(user.following));
+                if(user.following) {
+                    binding.btnFollow.setText(R.string.follow);
+                    unfollow();
+                } else {
+                    binding.btnFollow.setText(R.string.unfollow);
+                    follow();
+                }
+                user.following = !user.following;
+            }
+        });
+    }
+
+    /**
+     * Follow the user in which profile you are in
+     */
+    private void follow() {
+        // Update user's follower count
+        this.followerCount++;
+        this.binding.tvFollowersCount.setText(String.format("FOLLOWERS: %d", this.followerCount));
+        this.saveUserCounts(this.user, this.followerCount, this.followingCount);
+
+        // Update signed in user followings count
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Relations");
+        query.whereEqualTo("user", ParseUser.getCurrentUser());
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e == null) {
+                    int following = object.getInt("followingCount");
+                    object.put("followingCount", following + 1);
+                    object.saveInBackground();
+                } else {
+                    Log.e(TAG, "Error saving own users counts", e);
+                }
+            }
+        });
+
+        // Create follow object in database
+        ParseObject follow = new ParseObject("Follower");
+        follow.put("follower", ParseUser.getCurrentUser());
+        follow.put("following", this.user);
+        follow.saveInBackground();
+    }
+
+    /**
+     * Follow the user in which profile you are in
+     */
+    private void unfollow() {
+        // Update user's follower count
+        this.followerCount--;
+        this.binding.tvFollowersCount.setText(String.format("FOLLOWERS: %d", this.followerCount));
+        this.saveUserCounts(this.user, this.followerCount, this.followingCount);
+
+        // Update signed in user followings count
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Relations");
+        query.whereEqualTo("user", ParseUser.getCurrentUser());
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e == null) {
+                    int following = object.getInt("followingCount");
+                    object.put("followingCount", following - 1);
+                    object.saveInBackground();
+                } else {
+                    Log.e(TAG, "Error saving own users counts", e);
+                }
+            }
+        });
+
+        // Delete follow object in database
+        ParseQuery<ParseObject> q = ParseQuery.getQuery("Follower");
+        q.whereEqualTo("follower", ParseUser.getCurrentUser());
+        q.whereEqualTo("following", this.user);
+        q.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e == null) {
+                    for (ParseObject _object : objects) {
+                        _object.deleteInBackground();
+                    }
+                } else {
+                    Log.e(TAG, "Error deleting follower class object", e);
+                }
+            }
+        });
     }
 
     /**
@@ -69,11 +163,39 @@ public class ProfileActivity extends AppCompatActivity {
             public void done(User object, ParseException e) {
                 if(e == null) {
                     user = object;
+                    knowIfFollowing();
                     bindInformation();
                     getPlaces();
                 } else {
                     Toast.makeText(ProfileActivity.this, "User not found", Toast.LENGTH_LONG).show();
                     finish();
+                }
+            }
+        });
+    }
+
+    /**
+     * Determines if the current user is following the user owner of this profile
+     */
+    private void knowIfFollowing() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Follower");
+        query.whereEqualTo("follower", ParseUser.getCurrentUser());
+        query.whereEqualTo("following", this.user);
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e == null) {
+                    user.following = objects.size() == 1;
+
+                    // Set follow button text
+                    if(user.following) {
+                        binding.btnFollow.setText(R.string.unfollow);
+                    } else {
+                        binding.btnFollow.setText(R.string.follow);
+                    }
+                } else {
+                    Log.e(TAG, "Problem searching if user follows another user", e);
                 }
             }
         });
@@ -90,7 +212,7 @@ public class ProfileActivity extends AppCompatActivity {
             imageUrl = user.getProfilePicture().getUrl();
         } catch (NullPointerException e) {
             imageUrl = "";
-            Log.e(TAG, "No image for the user", e);
+            Log.e(TAG, "No image for the user");
         }
         Glide.with(this)
                 .load(imageUrl)
@@ -98,9 +220,44 @@ public class ProfileActivity extends AppCompatActivity {
                 .error(R.drawable.avatar)
                 .circleCrop()
                 .into(this.binding.ivProfilePicture);
-        this.binding.tvFollowersCount.setText(String.format("FOLLOWERS: %d", this.user.getFollowersCount()));
-        this.binding.tvFollowingCount.setText(String.format("FOLLOWERS: %d", this.user.getFollowingCount()));
         this.binding.tvBio.setText(this.user.getBio());
+
+        // Get followers and following count
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Relations");
+        query.whereEqualTo("user", this.user);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject _object, ParseException e) {
+                if(e == null) {
+                    followerCount = _object.getInt("followerCount");
+                    followingCount = _object.getInt("followingCount");
+                    binding.tvFollowersCount.setText(String.format("FOLLOWERS: %d", followerCount));
+                    binding.tvFollowingCount.setText(String.format("FOLLOWERS: %d", followingCount));
+                } else {
+                    Log.e(TAG, "Error getting counts", e);
+                }
+            }
+        });
+    }
+
+    /**
+     * Save followersCount and followingCount
+     */
+    private void saveUserCounts(User _user, int _followerCount, int _followingCount) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Relations");
+        query.whereEqualTo("user", _user);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e == null) {
+                    object.put("followerCount", _followerCount);
+                    object.put("followingCount", _followingCount);
+                    object.saveInBackground();
+                } else {
+                    Log.e(TAG, "Error saving counts", e);
+                }
+            }
+        });
     }
 
     /**
