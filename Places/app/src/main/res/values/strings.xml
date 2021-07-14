@@ -37,4 +37,6 @@
     <string name="users">Users</string>
     <string name="places">Places</string>
     <string name="no_results_found">No results found</string>
+    <string name="follow">Follow</string>
+    <string name="followers_0">Followers: 0</string>
 </resources>

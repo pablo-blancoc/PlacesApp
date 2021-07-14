@@ -121,7 +121,7 @@ public class SearchFragment extends Fragment {
                             imageUrl = user.getProfilePicture().getUrl();
                         } catch (NullPointerException ex) {
                             imageUrl = "";
-                            Log.e(TAG, "user not added: " + i, ex);
+                            // Log.e(TAG, "user not added: " + i, ex);
                         }
                             results.add(new SearchResult(true, user.getName(), user.getUsername(), imageUrl, user.getObjectId()));
                     }

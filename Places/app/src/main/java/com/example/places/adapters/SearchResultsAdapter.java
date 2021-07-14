@@ -1,17 +1,21 @@
 package com.example.places.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.places.ProfileActivity;
 import com.example.places.R;
 import com.example.places.models.SearchResult;
 
@@ -52,6 +56,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         private ImageView ivImage;
         private TextView tvName;
         private TextView tvSecondary;
+        private RelativeLayout rlItem;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,6 +65,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             this.ivImage = itemView.findViewById(R.id.ivImage);
             this.tvName = itemView.findViewById(R.id.tvName);
             this.tvSecondary = itemView.findViewById(R.id.tvSecondary);
+            this.rlItem = itemView.findViewById(R.id.rlItem);
         }
 
         /**
@@ -81,6 +87,20 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 this.tvSecondary.setText(String.format("Category: %s", result.secondaryInfo));
                 this.ivImage.setVisibility(View.GONE);
             }
+
+            // Click listener to go to detail
+            this.rlItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(result.isUser) {
+                        Intent intent = new Intent(context, ProfileActivity.class);
+                        intent.putExtra("user", result.objectId);
+                        context.startActivity(intent);
+                    } else {
+                        Toast.makeText(context, "not yet implemented", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
         }
 
