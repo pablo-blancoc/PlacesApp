@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.places.MainActivity;
 import com.example.places.R;
+import com.example.places.adapters.SearchResultsAdapter;
 import com.example.places.databinding.LikedFragmentBinding;
 import com.example.places.databinding.SearchFragmentBinding;
 import com.example.places.models.Place;
@@ -43,6 +45,7 @@ public class SearchFragment extends Fragment {
     private SearchFragmentBinding binding;
     private boolean isSearchUsers = true;
     private List<SearchResult> results;
+    private SearchResultsAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
@@ -53,11 +56,17 @@ public class SearchFragment extends Fragment {
         // Create instance of searchResults
         this.results = new ArrayList<>();
 
+        // Instantiate adapter
+        this.adapter = new SearchResultsAdapter(getContext(), this.results);
+        this.binding.rvResults.setAdapter(adapter);
+        this.binding.rvResults.setLayoutManager(new LinearLayoutManager(getContext()));
+
         // Search clickListener
         this.binding.btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 results.clear();
+                adapter.notifyDataSetChanged();
                 String searchText = binding.etSearch.getText().toString();
                 if(isSearchUsers) {
                     searchUsers(searchText);
@@ -116,6 +125,7 @@ public class SearchFragment extends Fragment {
                         }
                             results.add(new SearchResult(true, user.getName(), user.getUsername(), imageUrl, user.getObjectId()));
                     }
+                    adapter.notifyDataSetChanged();
                 } else {
                     Log.e(TAG, "Error while searching users", e);
                 }
@@ -133,6 +143,7 @@ public class SearchFragment extends Fragment {
 
         ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
         query.whereContains(Place.KEY_NAME, text);
+        query.include("category");
         query.findInBackground(new FindCallback<Place>() {
             @Override
             public void done(List<Place> places, ParseException e) {
@@ -145,6 +156,7 @@ public class SearchFragment extends Fragment {
                             Log.e(TAG, "user not added: " + i, ex);
                         }
                     }
+                    adapter.notifyDataSetChanged();
                 } else {
                     Log.e(TAG, "Error while searching users", e);
                 }
