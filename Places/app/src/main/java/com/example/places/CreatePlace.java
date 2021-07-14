@@ -59,6 +59,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.jetbrains.annotations.NotNull;
@@ -466,6 +467,7 @@ public class CreatePlace extends AppCompatActivity {
         place.setPhone(binding.etPhoneNumber.getText().toString());
         place.setCategory(this.category);
         place.setName(binding.etName.getText().toString());
+        place.setUser(ParseUser.getCurrentUser());
 
         // Reduce image size and add it into the place
         Bitmap fillSizeBitmap = BitmapFactory.decodeFile(image.toPath().toString());
