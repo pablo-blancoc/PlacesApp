@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
+    android:paddingBottom="25dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -224,7 +225,7 @@
                 app:srcCompat="@drawable/avatar" />
 
             <TextView
-                android:id="@+id/vtAuthorName"
+                android:id="@+id/tvAuthorName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/ivAuthorImage"
@@ -236,10 +237,10 @@
                 tools:text="Pablo Blanco" />
 
             <TextView
-                android:id="@+id/tvSecondary"
+                android:id="@+id/tvAuthorUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/vtAuthorName"
+                android:layout_below="@id/tvAuthorName"
                 android:layout_toEndOf="@id/ivAuthorImage"
                 android:layout_marginStart="10dp"
                 tools:text="\@pablo" />

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.places.PlaceDetailActivity;
 import com.example.places.ProfileActivity;
 import com.example.places.R;
 import com.example.places.models.Place;
@@ -72,6 +73,15 @@ public class ProfilePlacesAdapter extends RecyclerView.Adapter<ProfilePlacesAdap
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.error)
                     .into(image);
+
+            this.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, PlaceDetailActivity.class);
+                    intent.putExtra("place", place.getObjectId());
+                    context.startActivity(intent);
+                }
+            });
         }
 
     }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -152,7 +153,46 @@ public class PlaceDetailActivity extends AppCompatActivity {
         } else {
             this.binding.rlAuthor.setVisibility(View.VISIBLE);
             this.binding.rlEdit.setVisibility(View.GONE);
+
+            this.binding.rlAuthor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(PlaceDetailActivity.this, ProfileActivity.class);
+                    intent.putExtra("user", place.getUser().getObjectId());
+                    startActivity(intent);
+                }
+            });
         }
+
+        // Set author's information
+        String authorProfileImage, authorName, authorUsername;
+        try {
+            authorProfileImage = this.place.getUser().getParseFile(User.KEY_PROFILE_PICTURE).getUrl();
+        } catch (NullPointerException e) {
+            authorProfileImage = "";
+            Log.e(TAG, "Author doesn't have image");
+        }
+        try {
+            authorName = this.place.getUser().get(User.KEY_NAME).toString();
+        } catch (NullPointerException e) {
+            authorName = "[NO NAME]";
+            Log.e(TAG, "Author doesn't have image");
+        }
+        try {
+            authorUsername = String.format("@%s", this.place.getUser().get("username").toString());
+        } catch (NullPointerException e) {
+            authorUsername = "[NO NAME USERNAME]";
+            Log.e(TAG, "Author doesn't have image");
+        }
+        this.binding.tvAuthorName.setText(authorName);
+        this.binding.tvAuthorUsername.setText(authorUsername);
+        Glide.with(PlaceDetailActivity.this)
+                .load(authorProfileImage)
+                .placeholder(R.drawable.avatar)
+                .error(R.drawable.avatar)
+                .circleCrop()
+                .into(this.binding.ivAuthorImage);
+
 
         // Set edit actions
         if(this.place.getPublic()) {

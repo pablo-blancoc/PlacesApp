@@ -93,15 +93,15 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             this.rlItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(result.isUser) {
-                        Intent intent = new Intent(context, ProfileActivity.class);
+                    Intent intent;
+                    if (result.isUser) {
+                        intent = new Intent(context, ProfileActivity.class);
                         intent.putExtra("user", result.objectId);
-                        context.startActivity(intent);
                     } else {
-                        Intent intent = new Intent(context, PlaceDetailActivity.class);
+                        intent = new Intent(context, PlaceDetailActivity.class);
                         intent.putExtra("place", result.objectId);
-                        context.startActivity(intent);
                     }
+                    context.startActivity(intent);
                 }
             });
 
