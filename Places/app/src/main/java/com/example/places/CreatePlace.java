@@ -16,6 +16,7 @@ import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -497,9 +498,14 @@ public class CreatePlace extends AppCompatActivity {
      * @param reducedBitmap: the bitmap to convert to file
      */
     private File getBitmapFile(Bitmap reducedBitmap) {
+        // Rotate bitmap to correct issues
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(reducedBitmap, 0, 0, reducedBitmap.getWidth(), reducedBitmap.getHeight(), matrix, true);
+
         File file = new File(outputDirectory, new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US).format(System.currentTimeMillis()) + ".jpg");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        reducedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
         byte[] bitmapData = bos.toByteArray();
 
         try {

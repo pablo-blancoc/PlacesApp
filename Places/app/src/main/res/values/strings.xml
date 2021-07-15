@@ -51,7 +51,6 @@
     <string name="make_private">MAKE PRIVATE</string>
     <string name="sure_question">Sure?</string>
     <string name="take_a_new_profile_picture">Take a new profile picture</string>
-    <string name="take_picture">Take picture</string>
     <string name="retake">Retake</string>
     <string name="post">Post</string>
 </resources>

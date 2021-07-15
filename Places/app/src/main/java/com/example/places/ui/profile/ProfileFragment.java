@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.places.ProfileActivity;
 import com.example.places.R;
+import com.example.places.TakePictureActivity;
 import com.example.places.adapters.ProfilePlacesAdapter;
 import com.example.places.adapters.SearchResultsAdapter;
 import com.example.places.databinding.ActivityProfileBinding;
@@ -90,6 +92,15 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // Add clickListener to update profile picture
+        this.binding.ivProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, TakePictureActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return root;
     }
 
@@ -117,8 +128,12 @@ public class ProfileFragment extends Fragment {
             public void done(User object, ParseException e) {
                 if(e == null) {
                     user = object;
-                    bindInformation();
-                    getPlaces();
+                    try {
+                        bindInformation();
+                        getPlaces();
+                    } catch (NullPointerException ex) {
+                        Toast.makeText(context, "Could not retrieve information. Check internet connection", Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Toast.makeText(context, "User not found", Toast.LENGTH_LONG).show();
                 }
@@ -129,7 +144,7 @@ public class ProfileFragment extends Fragment {
     /**
      * Binds the information of the logged user into the page
      */
-    private void bindInformation() {
+    private void bindInformation() throws NullPointerException {
         this.binding.tvName.setText(this.user.getName());
         this.binding.tvUsername.setText(String.format("@%s", this.user.getUsername()));
         String imageUrl;
