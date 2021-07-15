@@ -64,9 +64,13 @@ public class ProfileActivity extends AppCompatActivity {
                 Log.d(TAG, String.valueOf(user.following));
                 if(user.following) {
                     binding.btnFollow.setText(R.string.follow);
+                    binding.btnFollow.setTextColor(getResources().getColor(R.color.white));
+                    binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.primary));
                     unfollow();
                 } else {
                     binding.btnFollow.setText(R.string.unfollow);
+                    binding.btnFollow.setTextColor(getResources().getColor(R.color.primary));
+                    binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.white));
                     follow();
                 }
                 user.following = !user.following;
@@ -191,8 +195,12 @@ public class ProfileActivity extends AppCompatActivity {
                     // Set follow button text
                     if(user.following) {
                         binding.btnFollow.setText(R.string.unfollow);
+                        binding.btnFollow.setTextColor(getResources().getColor(R.color.primary));
+                        binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.white));
                     } else {
                         binding.btnFollow.setText(R.string.follow);
+                        binding.btnFollow.setTextColor(getResources().getColor(R.color.white));
+                        binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.primary));
                     }
                 } else {
                     Log.e(TAG, "Problem searching if user follows another user", e);
