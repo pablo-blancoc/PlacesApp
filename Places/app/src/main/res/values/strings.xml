@@ -41,4 +41,11 @@
     <string name="unfollow">Unfollow</string>
     <string name="followers_0">Followers: 0</string>
     <string name="example">example</string>
+    <string name="category">Category: </string>
+    <string name="location">Location</string>
+    <string name="_0_likes">0 likes</string>
+    <string name="published_by">Posted by:</string>
+    <string name="edit">Edit</string>
+    <string name="make_public">make public</string>
+    <string name="delete">Delete</string>
 </resources>

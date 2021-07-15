@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.places.PlaceDetailActivity;
 import com.example.places.ProfileActivity;
 import com.example.places.R;
 import com.example.places.models.SearchResult;
@@ -97,7 +98,9 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                         intent.putExtra("user", result.objectId);
                         context.startActivity(intent);
                     } else {
-                        Toast.makeText(context, "not yet implemented", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context, PlaceDetailActivity.class);
+                        intent.putExtra("place", result.objectId);
+                        context.startActivity(intent);
                     }
                 }
             });

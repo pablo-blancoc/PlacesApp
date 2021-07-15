@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".PlaceDetailActivity">
+
+
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="#E0E0E0"/>
+
+        <ProgressBar
+            android:id="@+id/loading"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:indeterminateTint="@color/primary"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipLikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivImage"
+            app:chipIcon="@drawable/icon_like"
+            app:chipIconTint="@color/primary"
+            android:text="@string/_0_likes"
+            android:layout_marginStart="10dp"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_below="@id/chipLikes"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            tools:text="Rupestre" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabCall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/ivImage"
+            android:layout_marginTop="-25dp"
+            android:layout_marginEnd="25dp"
+            android:backgroundTint="@color/green"
+            android:clickable="true"
+            app:srcCompat="@drawable/icon_call" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/fabCall"
+            android:layout_below="@id/ivImage"
+            android:layout_marginTop="-25dp"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/white"
+            android:clickable="true"
+            app:tint="@color/black"
+            app:srcCompat="@drawable/icon_like" />
+
+        <TextView
+            android:id="@+id/titleCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvName"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textAllCaps="true"
+            android:text="@string/category" />
+
+        <TextView
+            android:id="@+id/tvCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_toEndOf="@id/titleCategory"
+            android:layout_below="@id/tvName"
+            android:textAllCaps="true"
+            android:textColor="#555555"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="Fast food" />
+
+        <TextView
+            android:id="@+id/titleDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_below="@id/titleCategory"
+            android:layout_marginTop="15dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAllCaps="true"
+            android:text="@string/description" />
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleDescription"
+            android:layout_marginHorizontal="10dp"
+            android:textColor="#555555"
+            android:textSize="16sp"
+            tools:text="This is an awesome description" />
+
+        <TextView
+            android:id="@+id/titlePrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_below="@id/tvDescription"
+            android:layout_marginTop="15dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAllCaps="true"
+            android:text="@string/price" />
+
+        <RatingBar
+            android:id="@+id/rbPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titlePrice"
+            android:layout_marginStart="10dp"
+            android:layout_alignParentStart="true"
+            android:clickable="false"
+            android:isIndicator="true"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:numStars="5"
+            android:stepSize="1" />
+
+        <TextView
+            android:id="@+id/titleAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_below="@id/rbPrice"
+            android:layout_marginTop="15dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAllCaps="true"
+            android:text="@string/address" />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleAddress"
+            android:layout_marginHorizontal="10dp"
+            android:textColor="#555555"
+            android:textSize="16sp"
+            tools:text="Remanso del Castor #1958" />
+
+        <TextView
+            android:id="@+id/titleLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_below="@id/tvAddress"
+            android:layout_marginTop="15dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAllCaps="true"
+            android:text="@string/location" />
+
+        <fragment
+            android:id="@+id/map"
+            class="com.example.places.WorkaroundMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginVertical="10dp"
+            android:layout_below="@id/titleLocation" />
+
+        <RelativeLayout
+            android:id="@+id/rlAuthor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/map">
+
+            <TextView
+                android:id="@+id/titleAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAllCaps="true"
+                android:text="@string/published_by" />
+
+            <ImageView
+                android:id="@+id/ivAuthorImage"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:layout_below="@id/titleAuthor"
+                app:srcCompat="@drawable/avatar" />
+
+            <TextView
+                android:id="@+id/vtAuthorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/ivAuthorImage"
+                android:layout_marginStart="10dp"
+                android:layout_below="@id/titleAuthor"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                tools:text="Pablo Blanco" />
+
+            <TextView
+                android:id="@+id/tvSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/vtAuthorName"
+                android:layout_toEndOf="@id/ivAuthorImage"
+                android:layout_marginStart="10dp"
+                tools:text="\@pablo" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            android:layout_below="@id/map">
+
+            <TextView
+                android:id="@+id/titleEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAllCaps="true"
+                android:text="@string/edit" />
+
+            <Button
+                android:id="@+id/btnPublic"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:layout_marginHorizontal="10dp"
+                android:layout_below="@id/titleEdit"
+                android:text="@string/make_public"/>
+
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:layout_marginHorizontal="10dp"
+                android:layout_below="@id/titleEdit"
+                android:layout_toEndOf="@id/btnPublic"
+                android:text="@string/delete"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</ScrollView>

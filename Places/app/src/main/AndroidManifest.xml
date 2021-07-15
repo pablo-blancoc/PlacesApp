@@ -34,6 +34,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Places">
+        <activity android:name=".PlaceDetailActivity"></activity>
         <activity
             android:name=".ProfileActivity"
             android:configChanges="orientation"
