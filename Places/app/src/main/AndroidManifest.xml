@@ -37,6 +37,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Places">
+        <activity android:name=".TakePictureActivity"></activity>
         <activity
             android:name=".PlaceDetailActivity"
             android:configChanges="orientation"
