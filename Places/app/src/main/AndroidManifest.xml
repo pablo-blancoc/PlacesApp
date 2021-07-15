@@ -25,6 +25,9 @@
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
     </queries>
+    <queries>
+        <package android:name="com.google.android.apps.maps" />
+    </queries>
 
     <application
         android:name=".ParseApplication"
@@ -34,7 +37,10 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Places">
-        <activity android:name=".PlaceDetailActivity"></activity>
+        <activity
+            android:name=".PlaceDetailActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ProfileActivity"
             android:configChanges="orientation"
