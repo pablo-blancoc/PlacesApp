@@ -3,6 +3,8 @@ package com.example.places;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,10 +24,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.DeleteCallback;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 public class PlaceDetailActivity extends AppCompatActivity {
 
@@ -217,6 +223,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         });
 
         // Set call fab action listener
+        this.binding.fabCall.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.green)));
         this.binding.fabCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,8 +240,90 @@ public class PlaceDetailActivity extends AppCompatActivity {
             }
         });
 
+        // Set fab like colors
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Like");
+        query.whereEqualTo("user", ParseUser.getCurrentUser());
+        query.whereEqualTo("place", this.place);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    place.liked = objects.size() == 1;
+
+                    // Set follow button text
+                    if (place.liked) {
+                        binding.fabLike.setImageTintList(ColorStateList.valueOf(getColor(R.color.primary)));
+                        binding.fabLike.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.primary)));
+                    } else {
+                        binding.fabLike.setImageTintList(ColorStateList.valueOf(getColor(R.color.black)));
+                        binding.fabLike.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.black)));
+                    }
+                } else {
+                    Log.e(TAG, "Problem knowing if place is liked", e);
+                }
+            }
+        });
+
+        // Set like actions listener
+        this.binding.fabLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(place.liked) {
+                    binding.fabLike.setImageTintList(ColorStateList.valueOf(getColor(R.color.black)));
+                    binding.fabLike.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.black)));
+                    unlike();
+                } else {
+                    binding.fabLike.setImageTintList(ColorStateList.valueOf(getColor(R.color.primary)));
+                    binding.fabLike.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.primary)));
+                    like();
+                }
+                place.liked = !place.liked;
+            }
+        });
+
 
         this.binding.loading.setVisibility(View.GONE);
+    }
+
+    /**
+     * Likes the place
+     */
+    private void like() {
+        // Update place likeCount
+        this.place.setLikeCount(this.place.getLikeCount() + 1);
+        this.place.saveInBackground();
+        this.binding.chipLikes.setText(String.format("%d likes", this.place.getLikeCount()));
+
+        // Create like object on database
+        ParseObject like = new ParseObject("Like");
+        like.put("user", ParseUser.getCurrentUser());
+        like.put("place", this.place);
+        like.saveInBackground();
+    }
+
+    /**
+     * Unlikes the place
+     */
+    private void unlike() {
+        // Update place likeCount
+        this.place.setLikeCount(this.place.getLikeCount() - 1);
+        this.place.saveInBackground();
+        this.binding.chipLikes.setText(String.format("%d likes", this.place.getLikeCount()));
+
+        // Create like object on database
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Like");
+        query.whereEqualTo("user", ParseUser.getCurrentUser());
+        query.whereEqualTo("place", this.place);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e == null) {
+                    object.deleteInBackground();
+                } else {
+                    Log.e(TAG, "place not unliked", e);
+                }
+            }
+        });
     }
 
     /**

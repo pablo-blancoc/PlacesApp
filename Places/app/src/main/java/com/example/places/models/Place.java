@@ -22,6 +22,9 @@ public class Place extends ParseObject {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
 
+    // Attributes
+    public boolean liked;
+
     public ParseFile getImage() {
         return getParseFile(KEY_IMAGE);
     }
