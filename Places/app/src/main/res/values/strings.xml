@@ -48,4 +48,6 @@
     <string name="edit">Edit</string>
     <string name="make_public">make public</string>
     <string name="delete">Delete</string>
+    <string name="make_private">MAKE PRIVATE</string>
+    <string name="sure_question">Sure?</string>
 </resources>
