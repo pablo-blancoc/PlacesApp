@@ -3,6 +3,7 @@ package com.example.places;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -212,6 +213,23 @@ public class PlaceDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 deletePlace();
+            }
+        });
+
+        // Set call fab action listener
+        this.binding.fabCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uri = "tel:" + place.getPhone();
+
+                if(uri.length() < 5) {
+                    Toast.makeText(PlaceDetailActivity.this, "This place doesn't have a phone", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse(uri));
+                startActivity(intent);
             }
         });
 
