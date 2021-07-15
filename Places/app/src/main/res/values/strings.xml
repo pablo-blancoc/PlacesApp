@@ -53,4 +53,5 @@
     <string name="take_a_new_profile_picture">Take a new profile picture</string>
     <string name="retake">Retake</string>
     <string name="post">Post</string>
+    <string name="update_info">To update your information click on it</string>
 </resources>
