@@ -144,6 +144,7 @@ public class SearchFragment extends Fragment {
         ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
         query.whereContains(Place.KEY_NAME, text);
         query.include("category");
+        query.whereEqualTo("public", true);
         query.findInBackground(new FindCallback<Place>() {
             @Override
             public void done(List<Place> places, ParseException e) {
