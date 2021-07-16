@@ -70,6 +70,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -323,6 +324,16 @@ public class CreatePlace extends AppCompatActivity {
 
                 // Save image into File variable
                 image = new File(savedUri.getPath());
+
+                // Try to user TFClassifier
+                TFClassifier model = new TFClassifier(CreatePlace.this);
+                String prediction = model.predict(image);
+                if(!prediction.isEmpty()) {
+                    binding.tvAICategories.setVisibility(View.VISIBLE);
+                    binding.tvAICategories.setText(String.format("Our AI recommends %s category", prediction.toUpperCase()));
+                } else {
+                    binding.tvAICategories.setVisibility(View.GONE);
+                }
 
                 // Load image with Glide
                 Glide.with(CreatePlace.this)

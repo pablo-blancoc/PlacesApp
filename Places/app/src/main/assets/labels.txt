@@ -1,0 +1,5 @@
+italian
+japanese
+drinks
+coffee
+fast_food
