@@ -45,6 +45,7 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
@@ -169,10 +170,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void done(ParseObject _object, ParseException e) {
                 if(e == null) {
-                    followerCount = _object.getInt("followerCount");
-                    followingCount = _object.getInt("followingCount");
-                    binding.tvFollowersCount.setText(String.format("FOLLOWERS: %d", followerCount));
-                    binding.tvFollowingCount.setText(String.format("FOLLOWERS: %d", followingCount));
+                    try {
+                        followerCount = _object.getInt("followerCount");
+                        followingCount = _object.getInt("followingCount");
+                        binding.tvFollowersCount.setText(String.format("FOLLOWERS: %d", followerCount));
+                        binding.tvFollowingCount.setText(String.format("FOLLOWERS: %d", followingCount));
+                    } catch (NullPointerException ex) {
+                        Log.e(TAG, "NULL POINTER EXCEPTION ON QUERY RELATIONS");
+                    }
                 } else {
                     Log.e(TAG, "Error getting counts", e);
                 }
