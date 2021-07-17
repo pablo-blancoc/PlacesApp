@@ -36,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     ActivityProfileBinding binding;
     List<Place> places;
     ProfilePlacesAdapter adapter;
+    String uid;
     int followerCount = 0, followingCount = 0;
 
     @Override
@@ -48,8 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Get userId of the profile that wants to be shown
         Intent intent = getIntent();
-        String uid = intent.getStringExtra("user");
-        this.getUser(uid);
+        this.uid = intent.getStringExtra("user");
 
         // Create adapter and set it
         this.places = new ArrayList<>();
@@ -76,6 +76,15 @@ public class ProfileActivity extends AppCompatActivity {
                 user.following = !user.following;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Get user information
+        this.places.clear();
+        this.getUser();
     }
 
     /**
@@ -155,13 +164,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * Get the information from the user that wants to be shown and bind the information
-     * @param uid: The user that wants to be shown
      */
-    private void getUser(String uid) {
+    private void getUser() {
         this.binding.loading.setVisibility(View.VISIBLE);
 
         ParseQuery<User> query = ParseQuery.getQuery(User.class);
-        query.whereEqualTo(User.KEY_OBJECT_ID, uid);
+        query.whereEqualTo(User.KEY_OBJECT_ID, this.uid);
         query.getFirstInBackground(new GetCallback<User>() {
             @Override
             public void done(User object, ParseException e) {
@@ -240,7 +248,7 @@ public class ProfileActivity extends AppCompatActivity {
                     followerCount = _object.getInt("followerCount");
                     followingCount = _object.getInt("followingCount");
                     binding.tvFollowersCount.setText(String.format("FOLLOWERS: %d", followerCount));
-                    binding.tvFollowingCount.setText(String.format("FOLLOWERS: %d", followingCount));
+                    binding.tvFollowingCount.setText(String.format("FOLLOWING: %d", followingCount));
                 } else {
                     Log.e(TAG, "Error getting counts", e);
                 }

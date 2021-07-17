@@ -74,9 +74,6 @@ public class ProfileFragment extends Fragment {
         this.binding.rvPlaces.setAdapter(this.adapter);
         this.binding.rvPlaces.setLayoutManager(new GridLayoutManager(context, 3));
 
-        // Get logged user and fill information
-        this.getUser(ParseUser.getCurrentUser().getObjectId());
-
         // Add clickListener to modify the name of the user
         this.binding.tvName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +110,15 @@ public class ProfileFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Get logged user and fill information
+        this.places.clear();
+        this.getUser(ParseUser.getCurrentUser().getObjectId());
     }
 
     /**
@@ -174,7 +180,7 @@ public class ProfileFragment extends Fragment {
                         followerCount = _object.getInt("followerCount");
                         followingCount = _object.getInt("followingCount");
                         binding.tvFollowersCount.setText(String.format("FOLLOWERS: %d", followerCount));
-                        binding.tvFollowingCount.setText(String.format("FOLLOWERS: %d", followingCount));
+                        binding.tvFollowingCount.setText(String.format("FOLLOWING: %d", followingCount));
                     } catch (NullPointerException ex) {
                         Log.e(TAG, "NULL POINTER EXCEPTION ON QUERY RELATIONS");
                     }

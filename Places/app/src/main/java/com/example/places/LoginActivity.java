@@ -82,13 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                 finishLoading();
 
                 if( e == null ) {
-                    // Create relations object for user
-                    ParseObject object = new ParseObject("Relations");
-                    object.put("user", ParseUser.getCurrentUser());
-                    object.put("followerCount", 0);
-                    object.put("followingCount", 0);
-                    object.saveInBackground();
-
                     // Logged in
                     String text = String.format("Welcome, %s!", user.getUsername());
                     Toast.makeText(LoginActivity.this, text, Toast.LENGTH_SHORT).show();
@@ -120,6 +113,14 @@ public class LoginActivity extends AppCompatActivity {
                 finishLoading();
 
                 if (e == null) {
+
+                    // Create relations object for user
+                    ParseObject object = new ParseObject("Relations");
+                    object.put("user", ParseUser.getCurrentUser());
+                    object.put("followerCount", 0);
+                    object.put("followingCount", 0);
+                    object.saveInBackground();
+
                     login(username, password);
                 } else {
                     Toast.makeText(LoginActivity.this, "Could not signup", Toast.LENGTH_SHORT).show();
