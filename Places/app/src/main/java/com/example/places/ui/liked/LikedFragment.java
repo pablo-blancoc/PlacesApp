@@ -34,6 +34,7 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LikedFragment extends Fragment {
 
@@ -61,9 +62,6 @@ public class LikedFragment extends Fragment {
         this.binding.rvPlaces.setAdapter(this.adapter);
         this.binding.rvPlaces.setLayoutManager(new LinearLayoutManager(context));
 
-        // Query liked places
-        getLiked();
-
         return root;
     }
 
@@ -72,27 +70,25 @@ public class LikedFragment extends Fragment {
      */
     private void getLiked() {
         binding.loading.setVisibility(View.VISIBLE);
+        List<String> ids = new ArrayList<>();
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Like");
-        query.include("place");
-        query.whereEqualTo("user", ParseUser.getCurrentUser());
-        query.orderByDescending(ParseObject.KEY_CREATED_AT);
-        query.findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery<ParseObject> likesQuery = ParseQuery.getQuery("Like");
+        // likesQuery.include("place");
+        likesQuery.whereEqualTo("user", ParseUser.getCurrentUser());
+        likesQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-                binding.loading.setVisibility(View.GONE);
-
+                Log.d(TAG, String.valueOf(objects.size()));
                 if(e == null) {
                     if(objects.size() == 0) {
                         binding.tvNoResults.setVisibility(View.VISIBLE);
                         binding.rvPlaces.setVisibility(View.GONE);
+                        binding.loading.setVisibility(View.GONE);
                     } else {
-                        for(ParseObject object: objects) {
-                            places.add((Place) object.get("place"));
+                        for(int i=0; i<objects.size(); i++) {
+                            ids.add(objects.get(i).getParseObject("place").getObjectId());
+                            getPlaces(ids);
                         }
-                        adapter.notifyDataSetChanged();
-                        binding.tvNoResults.setVisibility(View.GONE);
-                        binding.rvPlaces.setVisibility(View.VISIBLE);
                     }
                 } else {
                     Toast.makeText(context, "Error getting liked", Toast.LENGTH_SHORT).show();
@@ -100,41 +96,6 @@ public class LikedFragment extends Fragment {
                 }
             }
         });
-
-
-        /*
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-
-            }
-        });
-
-        ParseQuery<Place> outerQuery = ParseQuery.getQuery(Place.class);
-        outerQuery.whereMatchesKeyInQuery(Place.KEY_OBJECT_ID, "place", innerQuery);
-        outerQuery.include(Place.KEY_USER);
-        outerQuery.findInBackground(new FindCallback<Place>() {
-            @Override
-            public void done(List<Place> objects, ParseException e) {
-                binding.loading.setVisibility(View.GONE);
-
-                if(e == null) {
-                    if(objects.size() == 0) {
-                        binding.tvNoResults.setVisibility(View.VISIBLE);
-                        binding.rvPlaces.setVisibility(View.GONE);
-                    } else {
-                        places.addAll(objects);
-                        adapter.notifyDataSetChanged();
-                        binding.tvNoResults.setVisibility(View.GONE);
-                        binding.rvPlaces.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    Toast.makeText(context, "Error getting liked", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error getting liked", e);
-                }
-            }
-        });
-        */
 
     }
 
@@ -144,4 +105,40 @@ public class LikedFragment extends Fragment {
         binding = null;
     }
 
+    private void getPlaces(List<String> ids) {
+        ParseQuery<Place> placesQuery = ParseQuery.getQuery(Place.class);
+        placesQuery.orderByDescending(Place.KEY_CREATED_AT);
+        placesQuery.include(Place.KEY_CATEGORY);
+        placesQuery.include(Place.KEY_USER);
+        placesQuery.whereContainedIn(Place.KEY_OBJECT_ID, ids);
+        placesQuery.findInBackground(new FindCallback<Place>() {
+            @Override
+            public void done(List<Place> _places, ParseException e) {
+                binding.loading.setVisibility(View.GONE);
+
+                if(e == null) {
+                    if(_places.size() == 0) {
+                        binding.tvNoResults.setVisibility(View.VISIBLE);
+                        binding.rvPlaces.setVisibility(View.GONE);
+                    } else {
+                        places.addAll(_places);
+                        adapter.notifyDataSetChanged();
+                        binding.tvNoResults.setVisibility(View.GONE);
+                        binding.rvPlaces.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    Toast.makeText(context, "Error getting liked", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error getting liked", e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Query liked places
+        getLiked();
+    }
 }
