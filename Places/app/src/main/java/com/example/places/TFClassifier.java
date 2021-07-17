@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.places.ml.Model;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.common.FileUtil;
@@ -42,42 +44,41 @@ public class TFClassifier {
 
     public String predict(File image) {
 
-//        String prediction;
-//        try {
-//            // Process image
-//            Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
-//            inputImageBuffer = loadImage(bitmap);
-//
-//            Model model = Model.newInstance(context);
-//
-//            // Creates inputs for reference.
-//            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
-//            inputFeature0.loadBuffer(inputImageBuffer.getBuffer());
-//
-//            // Runs model inference and gets result.
-//            Model.Outputs outputs = model.process(inputFeature0);
-//            TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
-//            float[] out = outputFeature0.getFloatArray();
-//
-//            float[] values = {out[0],out[1],out[2],out[3],out[4]};
-//
-//            int position = this.getIndexOfLargest(values);
-//            if(position < 0) {
-//                return "";
-//            }
-//
-//            prediction = associatedAxisLabels.get(position);
-//
-//            // Releases model resources if no longer used.
-//            model.close();
-//
-//        } catch (IOException e) {
-//            Log.e(TAG, "Error in predict", e);
-//            prediction = "";
-//        }
-//
-//        return prediction;
-        return "";
+        String prediction;
+        try {
+            // Process image
+            Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
+            inputImageBuffer = loadImage(bitmap);
+
+            Model model = Model.newInstance(context);
+
+            // Creates inputs for reference.
+            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
+            inputFeature0.loadBuffer(inputImageBuffer.getBuffer());
+
+            // Runs model inference and gets result.
+            Model.Outputs outputs = model.process(inputFeature0);
+            TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+            float[] out = outputFeature0.getFloatArray();
+
+            float[] values = {out[0],out[1],out[2],out[3],out[4]};
+
+            int position = this.getIndexOfLargest(values);
+            if(position < 0) {
+                return "";
+            }
+
+            prediction = associatedAxisLabels.get(position);
+
+            // Releases model resources if no longer used.
+            model.close();
+
+        } catch (IOException e) {
+            Log.e(TAG, "Error in predict", e);
+            prediction = "";
+        }
+
+        return prediction;
     }
 
     private TensorImage loadImage(Bitmap bitmap) {
@@ -105,8 +106,10 @@ public class TFClassifier {
             if ( array[i] > array[largest] ) largest = i;
         }
 
+        Log.d(TAG, "Prediction probability: " + String.valueOf(array[largest]));
+
         // position of the first largest found
-        if(array[largest] >= 0.4) {
+        if(array[largest] >= 0.5) {
             return largest;
         } else {
             return -1;

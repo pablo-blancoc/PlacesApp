@@ -107,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         user.setUsername(username);
         user.setPassword(password);
         user.setName(username);
+        user.setBio("default bio...");
         user.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
