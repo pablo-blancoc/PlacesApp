@@ -58,6 +58,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -472,8 +473,7 @@ public class CreatePlace extends AppCompatActivity {
         place.setLikeCount(0);
         place.setDescription(binding.etDescription.getText().toString());
         place.setPrice((int) binding.rbPrice.getRating());
-        place.setLat(placeLocation.getPosition().latitude);
-        place.setLng(placeLocation.getPosition().longitude);
+        place.setLocation(new ParseGeoPoint(placeLocation.getPosition().latitude, placeLocation.getPosition().longitude));
         place.setAddress(binding.etAddress.getText().toString());
         place.setPublic(this.sharePost);
         place.setPhone(binding.etPhoneNumber.getText().toString());

@@ -136,7 +136,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         this.binding.rbPrice.setRating(this.place.getPrice());
 
         // Add marker to map
-        LatLng placePosition = new LatLng(this.place.getLat(), this.place.getLng());
+        LatLng placePosition = new LatLng(this.place.getLocation().getLatitude(), this.place.getLocation().getLongitude());
         this.map.addMarker(new MarkerOptions()
                 .position(placePosition)
                 .title(this.place.getName()));

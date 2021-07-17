@@ -2,6 +2,7 @@ package com.example.places.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -12,8 +13,7 @@ public class Place extends ParseObject {
     public static final String KEY_LIKE_COUNT = "likeCount";
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_PRICE = "price";
-    public static final String KEY_LAT = "lat";
-    public static final String KEY_LNG = "lng";
+    public static final String KEY_LOCATION = "location";
     public static final String KEY_ADDRESS = "address";
     public static final String KEY_PUBLIC = "public";
     public static final String KEY_PHONE = "phoneNumber";
@@ -73,20 +73,12 @@ public class Place extends ParseObject {
         put(KEY_ADDRESS, address);
     }
 
-    public Double getLat() {
-        return getDouble(KEY_LAT);
+    public ParseGeoPoint getLocation() {
+        return getParseGeoPoint(KEY_LOCATION);
     }
 
-    public void setLat(Double lat) {
-        put(KEY_LAT, lat);
-    }
-
-    public Double getLng() {
-        return getDouble(KEY_LNG);
-    }
-
-    public void setLng(Double lng) {
-        put(KEY_LNG, lng);
+    public void setLocation(ParseGeoPoint location) {
+        put(KEY_LOCATION, location);
     }
 
     public int getPrice() {

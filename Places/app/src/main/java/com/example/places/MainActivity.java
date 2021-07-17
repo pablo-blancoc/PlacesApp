@@ -72,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
             // Create a place
             Intent intent = new Intent(this, CreatePlace.class);
             startActivity(intent);
+        } else if( id == R.id.saved ) {
+            // Create a place
+            Intent intent = new Intent(this, SavedPlacesActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

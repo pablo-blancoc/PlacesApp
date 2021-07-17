@@ -282,6 +282,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void getPlaces() {
         ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
         query.whereEqualTo("user", this.user);
+        query.whereEqualTo("public", true);
         query.findInBackground(new FindCallback<Place>() {
             @Override
             public void done(List<Place> _places, ParseException e) {

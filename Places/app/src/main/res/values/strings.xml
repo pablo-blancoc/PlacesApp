@@ -54,4 +54,5 @@
     <string name="retake">Retake</string>
     <string name="post">Post</string>
     <string name="update_info">To update your information click on it</string>
+    <string name="private_places">Private places</string>
 </resources>

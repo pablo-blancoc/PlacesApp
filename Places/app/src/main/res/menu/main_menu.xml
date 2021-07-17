@@ -20,6 +20,12 @@
         app:actionLayout="@layout/progress_bar" />
 
     <item
+        android:id="@+id/saved"
+        app:showAsAction="never"
+        android:actionLayout="@layout/activity_main"
+        android:title="@string/private_places" />
+
+    <item
         android:id="@+id/logout"
         app:showAsAction="never"
         android:actionLayout="@layout/activity_main"
