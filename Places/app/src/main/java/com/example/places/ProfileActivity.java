@@ -76,6 +76,35 @@ public class ProfileActivity extends AppCompatActivity {
                 user.following = !user.following;
             }
         });
+
+        // Followers clickListener
+        this.binding.tvFollowersCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToFollowers(1);
+            }
+        });
+
+        // Following clickListener
+        this.binding.tvFollowingCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToFollowers(-1);
+            }
+        });
+    }
+
+    /**
+     * Goes to followers page
+     * @param i: type of option clicked
+     *          1: Followers
+     *         -1: Following
+     */
+    private void goToFollowers(int i) {
+        Intent intent = new Intent(this, FollowersActivity.class);
+        intent.putExtra("type", i);
+        intent.putExtra("user", this.user.getObjectId());
+        startActivity(intent);
     }
 
     @Override

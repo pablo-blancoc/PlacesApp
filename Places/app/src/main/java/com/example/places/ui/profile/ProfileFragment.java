@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.places.FollowersActivity;
+import com.example.places.MainActivity;
 import com.example.places.ProfileActivity;
 import com.example.places.R;
 import com.example.places.TakePictureActivity;
@@ -96,6 +98,22 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(context, TakePictureActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        // Followers clickListener
+        this.binding.tvFollowersCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToFollowers(1);
+            }
+        });
+
+        // Following clickListener
+        this.binding.tvFollowingCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToFollowers(-1);
             }
         });
 
@@ -244,6 +262,19 @@ public class ProfileFragment extends Fragment {
                 })
                 .create();
         dialog.show();
+    }
+
+    /**
+     * Goes to followers page
+     * @param i: type of option clicked
+     *          1: Followers
+     *         -1: Following
+     */
+    private void goToFollowers(int i) {
+        Intent intent = new Intent(this.context, FollowersActivity.class);
+        intent.putExtra("type", i);
+        intent.putExtra("user", this.user.getObjectId());
+        startActivity(intent);
     }
 
 }

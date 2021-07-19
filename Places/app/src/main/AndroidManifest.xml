@@ -37,9 +37,22 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Places">
-        <activity android:name=".FindNearbyActivity"></activity>
-        <activity android:name=".SavedPlacesActivity" />
-        <activity android:name=".TakePictureActivity" />
+        <activity
+            android:name=".FollowersActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FindNearbyActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SavedPlacesActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TakePictureActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PlaceDetailActivity"
             android:configChanges="orientation"
