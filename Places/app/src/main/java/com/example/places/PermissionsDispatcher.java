@@ -50,6 +50,7 @@ final class PermissionsDispatcher extends AppCompatActivity {
     public Location mCurrentLocation;
     private GoogleMap map;
     private Context context;
+    private boolean firstUpdate = true;
     private long UPDATE_INTERVAL = 60000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
 
@@ -179,7 +180,10 @@ final class PermissionsDispatcher extends AppCompatActivity {
         }
 
         mCurrentLocation = location;
-        displayLocation();
+        if(this.firstUpdate) {
+            displayLocation();
+            this.firstUpdate = false;
+        }
     }
 
     /**
