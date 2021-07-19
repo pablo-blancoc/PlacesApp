@@ -2,14 +2,18 @@ package com.example.places;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -44,6 +48,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private SupportMapFragment mapFragment;
     private GoogleMap map;
     private int deleteStep = 0;
+    private Transition.TransitionListener transitionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +76,203 @@ public class PlaceDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Error loading map", Toast.LENGTH_SHORT).show();
         }
 
+        // Set up transitionListener
+        this.transitionListener = new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
 
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                enterReveal();
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        };
+
+        // Activate animation on enter by adding the transition listener
+        getWindow().getEnterTransition().addListener(this.transitionListener);
+
+        // Set up FABs visibility
+        this.binding.fabCall.setVisibility(View.INVISIBLE);
+        this.binding.fabLike.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * When the user exits the activity the exit transition should be triggered
+     */
+    @Override
+    public void onBackPressed() {
+        exitReveal();
+
+        super.onBackPressed();
+    }
+
+    /**
+     * Starts the transition to enter the DetailsActivity page
+     */
+    void enterReveal() {
+        // get the center for the clipping circles
+        int fabCall_x = binding.fabCall.getMeasuredWidth() / 2;
+        int fabCall_y = binding.fabCall.getMeasuredHeight() / 2;
+        int fabLike_x = binding.fabLike.getMeasuredWidth() / 2;
+        int fabLike_y = binding.fabLike.getMeasuredHeight() / 2;
+
+        // get the final radius for the clipping circle
+        int fabCall_finalRadius = Math.max(binding.fabCall.getWidth(), binding.fabCall.getHeight()) / 2;
+        int fabLike_finalRadius = Math.max(binding.fabLike.getWidth(), binding.fabLike.getHeight()) / 2;
+
+        // create the animator for this view (the start radius is zero)
+        Animator fabCall_anim = ViewAnimationUtils.createCircularReveal(binding.fabCall, fabCall_x, fabCall_y, 0, fabCall_finalRadius);
+        Animator fabLike_anim = ViewAnimationUtils.createCircularReveal(binding.fabLike, fabLike_x, fabLike_y, 0, fabLike_finalRadius);
+
+        // make the view visible and start the animation
+        binding.fabCall.setVisibility(View.VISIBLE);
+        binding.fabLike.setVisibility(View.VISIBLE);
+
+        // Add Listener for button animation
+        fabCall_anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                getWindow().getEnterTransition().removeListener(transitionListener);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        fabLike_anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                getWindow().getEnterTransition().removeListener(transitionListener);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        fabCall_anim.start();
+        fabLike_anim.start();
+    }
+
+    /**
+     * Starts the transition to exis the DetailsActivity
+     */
+    void exitReveal() {
+        // get the center for the clipping circle
+        int fabCall_x = binding.fabCall.getMeasuredWidth() / 2;
+        int fabCall_y = binding.fabCall.getMeasuredHeight() / 2;
+        int fabLike_x = binding.fabLike.getMeasuredWidth() / 2;
+        int fabLike_y = binding.fabLike.getMeasuredHeight() / 2;
+
+        // get the initial radius for the clipping circle
+        int fabCall_initialRadius = binding.fabCall.getWidth() / 2;
+        int fabLike_initialRadius = binding.fabLike.getWidth() / 2;
+
+        // create the animation (the final radius is zero)
+        Animator fabCall_anim = ViewAnimationUtils.createCircularReveal(binding.fabCall, fabCall_x, fabCall_y, fabCall_initialRadius, 0);
+        Animator fabLike_anim = ViewAnimationUtils.createCircularReveal(binding.fabLike, fabLike_x, fabLike_y, fabLike_initialRadius, 0);
+
+        // make the view invisible when the animation is done
+        fabCall_anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                binding.fabCall.setVisibility(View.INVISIBLE);
+            }
+        });
+        fabLike_anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                binding.fabLike.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        // Add listener to finish activity when animation finished
+        fabCall_anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                finishAfterTransition();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        fabLike_anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                finishAfterTransition();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        // start the animation
+        fabCall_anim.start();
+        fabLike_anim.start();
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.example.places.adapters;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,9 +12,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.places.MainActivity;
 import com.example.places.PlaceDetailActivity;
 import com.example.places.ProfileActivity;
 import com.example.places.R;
@@ -130,7 +134,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PlaceDetailActivity.class);
                     intent.putExtra("place", place.getObjectId());
-                    context.startActivity(intent);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context);
+                    context.startActivity(intent, options.toBundle());
                 }
             });
         }

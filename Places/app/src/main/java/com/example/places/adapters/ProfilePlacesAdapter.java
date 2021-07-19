@@ -1,5 +1,6 @@
 package com.example.places.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -79,7 +81,8 @@ public class ProfilePlacesAdapter extends RecyclerView.Adapter<ProfilePlacesAdap
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PlaceDetailActivity.class);
                     intent.putExtra("place", place.getObjectId());
-                    context.startActivity(intent);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context);
+                    context.startActivity(intent, options.toBundle());
                 }
             });
         }

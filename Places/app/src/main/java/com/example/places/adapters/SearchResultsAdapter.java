@@ -1,5 +1,6 @@
 package com.example.places.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -97,11 +99,13 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                     if (result.isUser) {
                         intent = new Intent(context, ProfileActivity.class);
                         intent.putExtra("user", result.objectId);
+                        context.startActivity(intent);
                     } else {
                         intent = new Intent(context, PlaceDetailActivity.class);
                         intent.putExtra("place", result.objectId);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context);
+                        context.startActivity(intent, options.toBundle());
                     }
-                    context.startActivity(intent);
                 }
             });
 
