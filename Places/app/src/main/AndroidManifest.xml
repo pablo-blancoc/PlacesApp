@@ -37,7 +37,8 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Places">
-        <activity android:name=".SavedPlacesActivity"></activity>
+        <activity android:name=".FindNearbyActivity"></activity>
+        <activity android:name=".SavedPlacesActivity" />
         <activity android:name=".TakePictureActivity" />
         <activity
             android:name=".PlaceDetailActivity"

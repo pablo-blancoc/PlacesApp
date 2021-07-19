@@ -76,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
             // Create a place
             Intent intent = new Intent(this, SavedPlacesActivity.class);
             startActivity(intent);
+        } else if( id == R.id.findNearby ) {
+            // Find nearby activity
+            Intent intent = new Intent(this, FindNearbyActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

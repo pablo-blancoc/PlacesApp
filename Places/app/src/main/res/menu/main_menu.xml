@@ -20,6 +20,12 @@
         app:actionLayout="@layout/progress_bar" />
 
     <item
+        android:id="@+id/findNearby"
+        app:showAsAction="never"
+        android:actionLayout="@layout/activity_main"
+        android:title="@string/find_nearby" />
+
+    <item
         android:id="@+id/saved"
         app:showAsAction="never"
         android:actionLayout="@layout/activity_main"

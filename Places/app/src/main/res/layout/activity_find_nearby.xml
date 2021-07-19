@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".FindNearbyActivity">
+
+    <fragment
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:id="@+id/rlPlace"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/ivPlaceImage"
+            android:layout_margin="10dp"
+            android:layout_width="100dp"
+            android:layout_height="80dp" />
+
+        <TextView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="1dp"
+            android:textSize="18sp"
+            android:text="@string/close_tag"/>
+
+        <TextView
+            android:id="@+id/tvPlaceName"
+            android:layout_toEndOf="@id/ivPlaceImage"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_below="@id/close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="The First Coffee Shop" />
+
+        <TextView
+            android:id="@+id/tvPlaceCategory"
+            android:layout_toEndOf="@id/ivPlaceImage"
+            android:layout_marginTop="10dp"
+            android:textColor="#555555"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_below="@id/tvPlaceName"
+            android:textAllCaps="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="CATEGORY: COFFEE" />
+
+        <Button
+            android:id="@+id/btnDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:layout_below="@id/tvPlaceCategory"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="5dp"
+            android:textSize="12sp"
+            android:text="@string/details" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="15dp"
+        android:layout_above="@id/sbRadius"
+        android:layout_centerHorizontal="true"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        tools:text="Range: 5 km"/>
+
+    <SeekBar
+        android:id="@+id/sbRadius"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@id/btnSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:text="@string/search" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:visibility="gone"
+        style="?android:attr/progressBarStyle"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
+
+
+</RelativeLayout>

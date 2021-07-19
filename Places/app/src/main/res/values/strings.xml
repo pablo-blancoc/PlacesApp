@@ -55,4 +55,8 @@
     <string name="post">Post</string>
     <string name="update_info">To update your information click on it</string>
     <string name="private_places">Private places</string>
+    <string name="find_in_range">Find in range:</string>
+    <string name="find_nearby">Find nearby</string>
+    <string name="details">details</string>
+    <string name="close_tag">[x]</string>
 </resources>

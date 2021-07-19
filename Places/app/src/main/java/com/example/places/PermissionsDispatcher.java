@@ -50,7 +50,8 @@ final class PermissionsDispatcher extends AppCompatActivity {
     public Location mCurrentLocation;
     private GoogleMap map;
     private Context context;
-    private boolean firstUpdate = true;
+    public boolean firstUpdate = true;
+    public int zoom = 17;
     private long UPDATE_INTERVAL = 60000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
 
@@ -193,7 +194,7 @@ final class PermissionsDispatcher extends AppCompatActivity {
     public void displayLocation() {
         if (mCurrentLocation != null) {
             LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, this.zoom);
             this.map.animateCamera(cameraUpdate);
         } else {
             Log.d(TAG, "GPS location not found, enable GPS");
