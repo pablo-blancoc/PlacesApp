@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.places.databinding.ActivityLoginBinding;
 import com.example.places.models.User;
+import com.onesignal.OneSignal;
 import com.parse.LogInCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
@@ -85,6 +86,17 @@ public class LoginActivity extends AppCompatActivity {
                     // Logged in
                     String text = String.format("Welcome, %s!", user.getUsername());
                     Toast.makeText(LoginActivity.this, text, Toast.LENGTH_SHORT).show();
+
+                    try {
+                        String oneSignalId = OneSignal.getDeviceState().getUserId();
+                        if(!oneSignalId.isEmpty()) {
+                            ParseUser.getCurrentUser().put(User.KEY_ONE_SIGNAL, oneSignalId);
+                            ParseUser.getCurrentUser().saveInBackground();
+                        }
+                    } catch (NullPointerException ex) {
+                        Log.e(TAG, "NoeSignal no UUID", ex);
+                    }
+
                     goMainActivity();
                 } else {
                     // Could not login

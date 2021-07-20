@@ -77,6 +77,24 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        // Notify clickListener
+        this.binding.btnNotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, String.valueOf(user.notify));
+                if(user.notify) {
+                    binding.btnNotify.setTextColor(getResources().getColor(R.color.white));
+                    binding.btnNotify.setBackgroundColor(getResources().getColor(R.color.primary));
+                    setNoNotify();
+                } else {
+                    binding.btnNotify.setTextColor(getResources().getColor(R.color.primary));
+                    binding.btnNotify.setBackgroundColor(getResources().getColor(R.color.white));
+                    setNotify();
+                }
+                user.notify = !user.notify;
+            }
+        });
+
         // Followers clickListener
         this.binding.tvFollowersCount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +132,39 @@ public class ProfileActivity extends AppCompatActivity {
         // Get user information
         this.places.clear();
         this.getUser();
+    }
+
+    /**
+     * Set notifications for the user you are seeing
+     */
+    private void setNotify() {
+        // Create notify object in database
+        ParseObject notify = new ParseObject("Notification");
+        notify.put("to", ParseUser.getCurrentUser());
+        notify.put("from", this.user);
+        notify.saveInBackground();
+    }
+
+    /**
+     * Delete notifications for the user you are seeing
+     */
+    private void setNoNotify() {
+        // Delete notify object in database
+        ParseQuery<ParseObject> q = ParseQuery.getQuery("Notification");
+        q.whereEqualTo("to", ParseUser.getCurrentUser());
+        q.whereEqualTo("from", this.user);
+        q.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e == null) {
+                    for (ParseObject _object : objects) {
+                        _object.deleteInBackground();
+                    }
+                } else {
+                    Log.e(TAG, "Error deleting notify class object", e);
+                }
+            }
+        });
     }
 
     /**
