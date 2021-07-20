@@ -129,6 +129,7 @@ public class FindNearbyActivity extends AppCompatActivity implements GoogleMap.O
         ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
         query.whereWithinKilometers(Place.KEY_LOCATION, currentLocation, this.radius);
         query.include("category");
+        query.whereEqualTo(Place.KEY_PUBLIC, true);
         query.findInBackground(new FindCallback<Place>() {
             @Override
             public void done(List<Place> _places, ParseException e) {
