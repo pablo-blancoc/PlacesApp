@@ -53,14 +53,15 @@
         android:layout_marginHorizontal="10dp"
         android:text="@string/follow" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnNotify"
         android:layout_width="55dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:gravity="center"
         android:layout_toStartOf="@id/btnFollow"
         android:layout_marginTop="20dp"
-        app:icon="@drawable/icon_bell" />
+        android:background="@color/primary"
+        android:src="@drawable/icon_bell" />
 
     <TextView
         android:id="@+id/tvFollowersCount"

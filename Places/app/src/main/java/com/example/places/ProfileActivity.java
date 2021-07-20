@@ -83,12 +83,10 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG, String.valueOf(user.notify));
                 if(user.notify) {
-                    binding.btnNotify.setTextColor(getResources().getColor(R.color.white));
-                    binding.btnNotify.setBackgroundColor(getResources().getColor(R.color.primary));
+                    binding.btnNotify.setImageResource(R.drawable.icon_bell);
                     setNoNotify();
                 } else {
-                    binding.btnNotify.setTextColor(getResources().getColor(R.color.primary));
-                    binding.btnNotify.setBackgroundColor(getResources().getColor(R.color.white));
+                    binding.btnNotify.setImageResource(R.drawable.icon_no_bell);
                     setNotify();
                 }
                 user.notify = !user.notify;
@@ -256,6 +254,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if(e == null) {
                     user = object;
                     knowIfFollowing();
+                    knowIfNotify();
                     bindInformation();
                     getPlaces();
                 } else {
@@ -289,6 +288,35 @@ public class ProfileActivity extends AppCompatActivity {
                         binding.btnFollow.setText(R.string.follow);
                         binding.btnFollow.setTextColor(getResources().getColor(R.color.white));
                         binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.primary));
+                    }
+                } else {
+                    Log.e(TAG, "Problem searching if user follows another user", e);
+                }
+            }
+        });
+    }
+
+    /**
+     * Determines if the current user has set notifications for the user it is seeing
+     */
+    private void knowIfNotify() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Notification");
+        query.whereEqualTo("to", ParseUser.getCurrentUser());
+        query.whereEqualTo("from", this.user);
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e == null) {
+                    user.notify = objects.size() == 1;
+
+                    // Set notify button
+                    if(user.notify) {
+                        binding.btnNotify.setImageResource(R.drawable.icon_bell);
+                        setNoNotify();
+                    } else {
+                        binding.btnNotify.setImageResource(R.drawable.icon_no_bell);
+                        setNotify();
                     }
                 } else {
                     Log.e(TAG, "Problem searching if user follows another user", e);
