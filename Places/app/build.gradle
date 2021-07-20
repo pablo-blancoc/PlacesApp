@@ -1,4 +1,5 @@
 plugins {
+    id 'com.onesignal.androidsdk.onesignal-gradle-plugin'
     id 'com.android.application'
 }
 
@@ -81,4 +82,7 @@ dependencies {
 
     // Pull to refresh
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+
+    // OneSignal
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 }
