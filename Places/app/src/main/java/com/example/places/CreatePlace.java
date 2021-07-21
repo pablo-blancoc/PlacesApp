@@ -124,9 +124,6 @@ public class CreatePlace extends AppCompatActivity {
         // Set backend apiKey
         this.apiKey = getString(R.string.server_api_key);
 
-        // Temporary server call
-        sendNotifications();
-
         // Since KEY_LOCATION was found in the Bundle, we can be sure that there was a last location saved
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION) && dispatcher != null) {
             dispatcher.mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
@@ -509,6 +506,9 @@ public class CreatePlace extends AppCompatActivity {
                 binding.loading.setVisibility(View.GONE);
                 binding.btnPost.setVisibility(View.VISIBLE);
                 if(e == null) {
+                    if(place.getPublic()) {
+                        sendNotifications(place.getObjectId());
+                    }
                     Toast.makeText(CreatePlace.this, "Nice place!", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
@@ -582,9 +582,8 @@ public class CreatePlace extends AppCompatActivity {
         });
     }
 
-    private void sendNotifications() {
-        String placeId = "tWnGrJVcYK",
-                userId = ParseUser.getCurrentUser().getObjectId();
+    private void sendNotifications(String placeId) {
+        String userId = ParseUser.getCurrentUser().getObjectId();
 
         // Create a new instance of AsyncHttpClient
         AsyncHttpClient client = new AsyncHttpClient();
@@ -604,7 +603,8 @@ public class CreatePlace extends AppCompatActivity {
 
             @Override
             public void onFailure(int i, Headers headers, String s, Throwable throwable) {
-                Log.e(TAG, "Call to backend server failed !!!", throwable);
+                Log.e(TAG, "Notifications not sent");
+                Log.e(TAG, "Call to backend server failed: " + s, throwable);
             }
         });
 

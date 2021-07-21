@@ -312,11 +312,9 @@ public class ProfileActivity extends AppCompatActivity {
 
                     // Set notify button
                     if(user.notify) {
-                        binding.btnNotify.setImageResource(R.drawable.icon_bell);
-                        setNoNotify();
-                    } else {
                         binding.btnNotify.setImageResource(R.drawable.icon_no_bell);
-                        setNotify();
+                    } else {
+                        binding.btnNotify.setImageResource(R.drawable.icon_bell);
                     }
                 } else {
                     Log.e(TAG, "Problem searching if user follows another user", e);
