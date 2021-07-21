@@ -33,6 +33,10 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestHeaders;
+import com.codepath.asynchttpclient.RequestParams;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.places.databinding.ActivityCreatePlaceBinding;
 import com.example.places.databinding.ActivityLoginBinding;
 import com.example.places.databinding.ActivityMainBinding;
@@ -79,6 +83,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import okhttp3.Headers;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.PermissionUtils;
 
@@ -91,6 +96,7 @@ public class CreatePlace extends AppCompatActivity {
     private final static String KEY_LOCATION = "location";
     private static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};
     private static final int CAMERA_REQUEST_CODE = 10;
+    private static final String SERVER_URL = "http://192.168.1.69:5000/";
 
     // Attributes
     private ActivityCreatePlaceBinding binding;
@@ -105,6 +111,7 @@ public class CreatePlace extends AppCompatActivity {
     File image;
     Marker placeLocation;
     private boolean sharePost = true;
+    private String apiKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +120,12 @@ public class CreatePlace extends AppCompatActivity {
         // Setup ViewBinding
         binding = ActivityCreatePlaceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Set backend apiKey
+        this.apiKey = getString(R.string.server_api_key);
+
+        // Temporary server call
+        sendNotifications();
 
         // Since KEY_LOCATION was found in the Bundle, we can be sure that there was a last location saved
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION) && dispatcher != null) {
@@ -567,6 +580,35 @@ public class CreatePlace extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void sendNotifications() {
+        String placeId = "tWnGrJVcYK",
+                userId = ParseUser.getCurrentUser().getObjectId();
+
+        // Create a new instance of AsyncHttpClient
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        RequestHeaders headers = new RequestHeaders();
+        headers.put("x-api-key", this.apiKey);
+
+        RequestParams params = new RequestParams();
+        params.put("user", userId);
+        params.put("place", placeId);
+
+        client.get(SERVER_URL + "push", headers, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Headers headers, JSON json) {
+                Log.d(TAG, "Notifications send successfully");
+            }
+
+            @Override
+            public void onFailure(int i, Headers headers, String s, Throwable throwable) {
+                Log.e(TAG, "Call to backend server failed !!!", throwable);
+            }
+        });
+
+
     }
 
 }
