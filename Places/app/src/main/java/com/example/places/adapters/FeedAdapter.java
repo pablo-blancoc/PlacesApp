@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         public void bind(Place place) {
             // Bind place's information
             this.tvName.setText(place.getName());
-            this.tvCategory.setText(String.format("CATEGORY: %s", place.getCategory().get("name")));
+
+            try {
+                this.tvCategory.setText(String.format("CATEGORY: %s", place.getCategory().get("name")));
+            } catch (NullPointerException e) {
+                Log.e("FeedAdapter", "Place: " + place.getName() + "doesn't have category", e);
+                return;
+            }
 
             String imageUrl;
             try {
