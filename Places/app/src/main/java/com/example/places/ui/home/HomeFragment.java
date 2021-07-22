@@ -16,10 +16,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.places.R;
 import com.example.places.adapters.FeedAdapter;
 import com.example.places.databinding.FragmentHomeBinding;
+import com.example.places.models.EndlessRecyclerViewScrollListener;
 import com.example.places.models.Place;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -41,6 +44,8 @@ public class HomeFragment extends Fragment {
     private Context context;
     private List<Place> places;
     private FeedAdapter adapter;
+    private int pager;
+    EndlessRecyclerViewScrollListener scrollListener;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -50,16 +55,56 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
         this.context = getContext();
 
+        // Setup SwipeContainer and colors for loading
+        this.binding.swipeContainer.setColorSchemeResources(R.color.primary, R.color.white, R.color.black);
+        this.binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshFeed(true);
+            }
+        });
+
         // Create and setup adapter
+        this.pager = 0;
         this.places = new ArrayList<>();
         this.adapter = new FeedAdapter(context, this.places);
         this.binding.rvPlaces.setAdapter(this.adapter);
         this.binding.rvPlaces.setLayoutManager(new LinearLayoutManager(context));
 
-        // Query your feed
-        getFeed();
+        // Set up endless scrolling
+        this.scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) this.binding.rvPlaces.getLayoutManager()) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                pager++;
+                getFeed();
+            }
+        };
+
+        // Set on scrollListener
+        this.binding.rvPlaces.addOnScrollListener(this.scrollListener);
 
         return root;
+    }
+
+    /**
+     * Gets the newest posts
+     */
+    private void refreshFeed(boolean fromSwiper) {
+        if(fromSwiper) {
+            this.pager = 0;
+            places.clear();
+            getFeed();
+            this.binding.swipeContainer.setRefreshing(false);
+        } else {
+            places.clear();
+            getFeed();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.refreshFeed(false);
     }
 
     /**
@@ -77,6 +122,8 @@ public class HomeFragment extends Fragment {
         outerQuery.whereMatchesKeyInQuery("user", "following", innerQuery);
         outerQuery.include(Place.KEY_USER);
         outerQuery.include(Place.KEY_CATEGORY);
+        outerQuery.setLimit(10);
+        outerQuery.setSkip(this.pager * 10);
         outerQuery.whereEqualTo(Place.KEY_PUBLIC, true);
 
         outerQuery.findInBackground(new FindCallback<Place>() {
