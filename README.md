@@ -11,6 +11,9 @@
     * [Navigation](#navigation)
     * [Wireframes](#wireframes)
     * [Schema](#schema)
+3. [Important features](#links)
+    * [Deep learning model](#deep-learning-model)
+    * [Backend server](#backend-server)
 
 ## Overview
 
@@ -101,3 +104,14 @@ This apps allows you to save restaurants, coffee-shops, and more in your own per
  
 ### Schema
 ![Schema image](https://github.com/pablo-blancoc/PlacesApp/blob/main/files/db_schema.png)
+
+## Links
+
+### Deep Learning model
+
+In this [repository](https://github.com/pablo-blancoc/PlacesApp-ml) it is all the information of the Deep Learning model implemented inside the app which classifies an image taken into the 5 categories the app has.
+
+### Backend server
+
+In this [repository](https://github.com/pablo-blancoc/PlacesApp-server) it is all the information of the backend server that runs locally and that allows the app do things like recommend a place to a user, and send notifications to users.
+
