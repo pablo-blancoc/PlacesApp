@@ -83,6 +83,9 @@ public class HomeFragment extends Fragment {
         // Set on scrollListener
         this.binding.rvPlaces.addOnScrollListener(this.scrollListener);
 
+        // Load data
+        this.refreshFeed(false);
+
         return root;
     }
 
@@ -99,12 +102,6 @@ public class HomeFragment extends Fragment {
             places.clear();
             getFeed();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        this.refreshFeed(false);
     }
 
     /**
