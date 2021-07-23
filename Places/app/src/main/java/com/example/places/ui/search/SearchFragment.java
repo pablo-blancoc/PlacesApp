@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import com.example.places.R;
 import com.example.places.adapters.SearchResultsAdapter;
 import com.example.places.databinding.LikedFragmentBinding;
 import com.example.places.databinding.SearchFragmentBinding;
+import com.example.places.models.EndlessRecyclerViewScrollListener;
 import com.example.places.models.Place;
 import com.example.places.models.SearchResult;
 import com.example.places.models.User;
@@ -39,6 +42,7 @@ public class SearchFragment extends Fragment {
 
     // Constants
     private final static String TAG = "SearchFragment";
+    private static final int MAX_RESULTS = 20;
 
     // Attributes
     private SearchViewModel searchViewModel;
@@ -46,6 +50,9 @@ public class SearchFragment extends Fragment {
     private boolean isSearchUsers = true;
     private List<SearchResult> results;
     private SearchResultsAdapter adapter;
+    private String searchText;
+    private int pager;
+    EndlessRecyclerViewScrollListener scrollListener;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
@@ -61,18 +68,27 @@ public class SearchFragment extends Fragment {
         this.binding.rvResults.setAdapter(adapter);
         this.binding.rvResults.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        // Set up endless scrolling
+        this.scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) this.binding.rvResults.getLayoutManager()) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                pager++;
+                search();
+            }
+        };
+
+        // Set on scrollListener
+        this.binding.rvResults.addOnScrollListener(this.scrollListener);
+
         // Search clickListener
         this.binding.btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 results.clear();
                 adapter.notifyDataSetChanged();
-                String searchText = binding.etSearch.getText().toString();
-                if(isSearchUsers) {
-                    searchUsers(searchText);
-                } else {
-                    searchPlaces(searchText);
-                }
+                searchText = binding.etSearch.getText().toString();
+                pager = 0;
+                search();
             }
         });
 
@@ -102,14 +118,27 @@ public class SearchFragment extends Fragment {
     }
 
     /**
+     * Search for results
+     */
+    private void search() {
+        if(this.isSearchUsers) {
+            searchUsers();
+        } else {
+            searchPlaces();
+        }
+    }
+
+    /**
      * Searches for users with the given search words
      */
-    private void searchUsers(String text) {
+    private void searchUsers() {
         this.onStartLoading();
 
         ParseQuery<User> query = ParseQuery.getQuery(User.class);
-        query.whereContains(User.KEY_NAME, text);
+        query.whereContains(User.KEY_NAME, this.searchText);
         query.whereNotEqualTo(User.KEY_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
+        query.setLimit(MAX_RESULTS);
+        query.setSkip(this.pager * MAX_RESULTS);
         query.findInBackground(new FindCallback<User>() {
             @Override
             public void done(List<User> users, ParseException e) {
@@ -121,7 +150,6 @@ public class SearchFragment extends Fragment {
                             imageUrl = user.getProfilePicture().getUrl();
                         } catch (NullPointerException ex) {
                             imageUrl = "";
-                            // Log.e(TAG, "user not added: " + i, ex);
                         }
                             results.add(new SearchResult(true, user.getName(), user.getUsername(), imageUrl, user.getObjectId()));
                     }
@@ -138,13 +166,15 @@ public class SearchFragment extends Fragment {
     /**
      * Searches for places with the given search words
      */
-    private void searchPlaces(String text) {
+    private void searchPlaces() {
         this.onStartLoading();
 
         ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
-        query.whereContains(Place.KEY_NAME, text);
+        query.whereContains(Place.KEY_NAME, this.searchText);
         query.include("category");
         query.whereEqualTo("public", true);
+        query.setLimit(MAX_RESULTS);
+        query.setSkip(this.pager * MAX_RESULTS);
         query.findInBackground(new FindCallback<Place>() {
             @Override
             public void done(List<Place> places, ParseException e) {
@@ -168,13 +198,11 @@ public class SearchFragment extends Fragment {
     }
 
     private void onStartLoading() {
-        this.binding.tvNoResults.setVisibility(View.GONE);
-        this.binding.rvResults.setVisibility(View.GONE);
         this.binding.loading.setVisibility(View.VISIBLE);
+        this.binding.tvNoResults.setVisibility(View.GONE);
     }
 
     private void onStopLoading() {
-        Log.d(TAG, "RESULTS: " + this.results.size());
         if(this.results.size() > 0) {
             this.binding.rvResults.setVisibility(View.VISIBLE);
         } else {
