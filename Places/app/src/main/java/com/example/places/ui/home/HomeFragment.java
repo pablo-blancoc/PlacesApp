@@ -79,8 +79,6 @@ public class HomeFragment extends Fragment {
                 getFeed();
             }
         };
-
-        // Set on scrollListener
         this.binding.rvPlaces.addOnScrollListener(this.scrollListener);
 
         // Load data
