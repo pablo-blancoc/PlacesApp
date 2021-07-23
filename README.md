@@ -100,4 +100,4 @@ This apps allows you to save restaurants, coffee-shops, and more in your own per
 ![Wireframes image](https://github.com/pablo-blancoc/PlacesApp/blob/main/files/wireframes.png)
  
 ### Schema
-![Schema image](https://github.com/pablo-blancoc/PlacesApp/blob/main/files/schema.png)
+![Schema image](https://github.com/pablo-blancoc/PlacesApp/blob/main/files/db_schema.png)
