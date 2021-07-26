@@ -28,6 +28,8 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class SavedPlacesActivity extends AppCompatActivity {
 
     // Constants
@@ -132,7 +134,7 @@ public class SavedPlacesActivity extends AppCompatActivity {
                         binding.rvPlaces.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    Toast.makeText(SavedPlacesActivity.this, "Error getting places", Toast.LENGTH_SHORT).show();
+                    Toasty.error(SavedPlacesActivity.this, "Error while retrieving places. Check your internet connection and try again later.", Toast.LENGTH_LONG).show();
                     Log.e(TAG, "Error getting saved places", e);
                 }
             }

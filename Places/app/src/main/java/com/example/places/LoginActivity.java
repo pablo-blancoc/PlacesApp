@@ -21,6 +21,8 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import es.dmoral.toasty.Toasty;
+
 import static android.view.View.GONE;
 
 public class LoginActivity extends AppCompatActivity {
@@ -85,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                 if( e == null ) {
                     // Logged in
                     String text = String.format("Welcome, %s!", user.getUsername());
-                    Toast.makeText(LoginActivity.this, text, Toast.LENGTH_SHORT).show();
+                    Toasty.success(LoginActivity.this, text, Toast.LENGTH_SHORT, true).show();
 
                     try {
                         String oneSignalId = OneSignal.getDeviceState().getUserId();
@@ -100,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                     goMainActivity();
                 } else {
                     // Could not login
-                    Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_LONG).show();
+                    Toasty.error(LoginActivity.this, "Invalid credentials", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error on login: ", e);
                 }
             }
@@ -136,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     login(username, password);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Could not signup", Toast.LENGTH_SHORT).show();
+                    Toasty.error(LoginActivity.this, "Could not signup", Toast.LENGTH_SHORT, true).show();
                     Log.e(TAG, "Could not signup", e);
                 }
             }

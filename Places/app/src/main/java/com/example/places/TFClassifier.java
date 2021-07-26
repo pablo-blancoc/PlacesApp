@@ -109,7 +109,7 @@ public class TFClassifier {
         Log.d(TAG, "Prediction probability: " + String.valueOf(array[largest]));
 
         // position of the first largest found
-        if(array[largest] >= 0.6) {
+        if(array[largest] >= 0.7) {
             return largest;
         } else {
             return -1;

@@ -83,6 +83,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.Headers;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.PermissionUtils;
@@ -139,7 +140,7 @@ public class CreatePlace extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, "Error loading map", Toast.LENGTH_SHORT).show();
+            Toasty.error(this, "Error loading map", Toast.LENGTH_SHORT, true).show();
         }
 
         // Listener to take picture
@@ -166,31 +167,31 @@ public class CreatePlace extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(binding.etDescription.getText().toString().isEmpty()) {
-                    Toast.makeText(CreatePlace.this, "Description can't be empty", Toast.LENGTH_SHORT).show();
+                    Toasty.error(CreatePlace.this, "Description can't be empty", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
                 if(!addedMarker) {
-                    Toast.makeText(CreatePlace.this, "A marker hasn't been created", Toast.LENGTH_SHORT).show();
+                    Toasty.error(CreatePlace.this, "A marker hasn't been created", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
                 if(!(binding.rbPrice.getRating() > 0)) {
-                    Toast.makeText(CreatePlace.this, "Price hasn't been set", Toast.LENGTH_SHORT).show();
+                    Toasty.error(CreatePlace.this, "Price hasn't been set", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
                 if(binding.etAddress.getText().toString().isEmpty()) {
-                    Toast.makeText(CreatePlace.this, "Address can't be empty", Toast.LENGTH_SHORT).show();
+                    Toasty.error(CreatePlace.this, "Address can't be empty", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
                 if(category == null) {
-                    Toast.makeText(CreatePlace.this, "You need to select a category", Toast.LENGTH_SHORT).show();
+                    Toasty.error(CreatePlace.this, "You need to select a category", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
                 if(binding.etName.getText().toString().isEmpty()) {
-                    Toast.makeText(CreatePlace.this, "Place's name cannot be empty", Toast.LENGTH_SHORT).show();
+                    Toasty.error(CreatePlace.this, "Place's name cannot be empty", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
                 if(image == null || binding.ivImage.getDrawable() == null) {
-                    Toast.makeText(CreatePlace.this, "You need to take an image", Toast.LENGTH_SHORT).show();
+                    Toasty.error(CreatePlace.this, "You need to take an image", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
                 post();
@@ -227,7 +228,7 @@ public class CreatePlace extends AppCompatActivity {
             if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 enableCamera();
             } else {
-                Toast.makeText(this, "Permissions not grated by the user", Toast.LENGTH_SHORT).show();
+                Toasty.error(this, "Permissions need to be granted", Toast.LENGTH_LONG, true).show();
                 finish();
             }
         }
@@ -258,7 +259,7 @@ public class CreatePlace extends AppCompatActivity {
     protected void loadMap(GoogleMap googleMap) {
         this.map = googleMap;
         if (this.map == null) {
-            Toast.makeText(this, "Error loading map", Toast.LENGTH_SHORT).show();
+            Toasty.error(this, "Error loading map", Toast.LENGTH_LONG, true).show();
             return;
         }
 
@@ -356,7 +357,7 @@ public class CreatePlace extends AppCompatActivity {
 
             @Override
             public void onError(@NonNull ImageCaptureException exception) {
-                Toast.makeText(CreatePlace.this, "Image could not be saved. Try again later.", Toast.LENGTH_SHORT).show();
+                Toasty.error(CreatePlace.this, "Image could not be saved. Try again later.", Toasty.LENGTH_LONG, true).show();
                 Log.i("Image Capture", exception.toString());
             }
         });
@@ -453,7 +454,7 @@ public class CreatePlace extends AppCompatActivity {
                 if(e == null) {
                     category = object;
                 } else {
-                    Toast.makeText(CreatePlace.this, "Error while selecting category", Toast.LENGTH_SHORT).show();
+                    Toasty.error(CreatePlace.this, "Error while selecting category", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error while selecting category", e);
                 }
             }
@@ -509,10 +510,10 @@ public class CreatePlace extends AppCompatActivity {
                     if(place.getPublic()) {
                         sendNotifications(place.getObjectId());
                     }
-                    Toast.makeText(CreatePlace.this, "Nice place!", Toast.LENGTH_LONG).show();
+                    Toasty.success(CreatePlace.this, "Nice place!", Toasty.LENGTH_SHORT, true).show();
                     finish();
                 } else {
-                    Toast.makeText(CreatePlace.this, "Error occurred while posting place", Toast.LENGTH_LONG).show();
+                    Toasty.error(CreatePlace.this, "Error occurred while posting place", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error while posting place", e);
                 }
             }

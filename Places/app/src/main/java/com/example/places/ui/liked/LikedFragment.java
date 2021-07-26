@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import es.dmoral.toasty.Toasty;
+
 public class LikedFragment extends Fragment {
 
     // Constants
@@ -146,7 +148,7 @@ public class LikedFragment extends Fragment {
 
                     binding.loading.setVisibility(View.GONE);
                 } else {
-                    Toast.makeText(context, "Error getting liked", Toast.LENGTH_SHORT).show();
+                    Toasty.error(context, "Error while getting liked places. Please try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error getting liked", e);
                 }
             }

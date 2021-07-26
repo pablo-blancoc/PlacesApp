@@ -33,6 +33,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class FindNearbyActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener {
 
     // Constants
@@ -83,7 +85,7 @@ public class FindNearbyActivity extends AppCompatActivity implements GoogleMap.O
                 }
             });
         } else {
-            Toast.makeText(this, "Error loading map", Toast.LENGTH_SHORT).show();
+            Toasty.error(FindNearbyActivity.this, "Error while loading map. Check your connection and try again later.", Toast.LENGTH_LONG, true).show();
         }
 
         // Setup listener of SeekBar
@@ -153,7 +155,7 @@ public class FindNearbyActivity extends AppCompatActivity implements GoogleMap.O
                         markers.add(addedMarker);
                     }
                 } else {
-                    Toast.makeText(FindNearbyActivity.this, "Could not retrieve places", Toast.LENGTH_SHORT).show();
+                    Toasty.error(FindNearbyActivity.this, "Error while retrieving information. Check your connection and try again later.", Toast.LENGTH_LONG, true).show();
                 }
             }
         });
@@ -210,7 +212,7 @@ public class FindNearbyActivity extends AppCompatActivity implements GoogleMap.O
     protected void loadMap(GoogleMap googleMap) {
         this.map = googleMap;
         if (this.map == null) {
-            Toast.makeText(this, "Error loading map", Toast.LENGTH_SHORT).show();
+            Toasty.error(FindNearbyActivity.this, "Error while loading map. Check your connection and try again later.", Toast.LENGTH_LONG, true).show();
             return;
         }
 

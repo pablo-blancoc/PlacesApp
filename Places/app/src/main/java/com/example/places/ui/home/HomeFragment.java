@@ -33,6 +33,8 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class HomeFragment extends Fragment {
 
     // Constants
@@ -138,7 +140,7 @@ public class HomeFragment extends Fragment {
                         binding.rvPlaces.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    Toast.makeText(context, "Error getting timeline", Toast.LENGTH_SHORT).show();
+                    Toasty.error(context, "Error while getting timeline. Please try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error getting timeline", e);
                 }
             }

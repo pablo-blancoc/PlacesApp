@@ -2,6 +2,7 @@ package com.example.places.ui.search;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,8 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class SearchFragment extends Fragment {
 
     // Constants
@@ -50,6 +53,7 @@ public class SearchFragment extends Fragment {
     private boolean isSearchUsers = true;
     private List<SearchResult> results;
     private SearchResultsAdapter adapter;
+    private Context context;
     private String searchText;
     private int pager;
     EndlessRecyclerViewScrollListener scrollListener;
@@ -59,6 +63,7 @@ public class SearchFragment extends Fragment {
 
         this.binding = SearchFragmentBinding.inflate(inflater, container, false);
         View root = this.binding.getRoot();
+        this.context = getContext();
 
         // Create instance of searchResults
         this.results = new ArrayList<>();
@@ -155,6 +160,7 @@ public class SearchFragment extends Fragment {
                     }
                     adapter.notifyDataSetChanged();
                 } else {
+                    Toasty.error(context, "Error while searching users. Please try again later", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error while searching users", e);
                 }
 
@@ -189,6 +195,7 @@ public class SearchFragment extends Fragment {
                     }
                     adapter.notifyDataSetChanged();
                 } else {
+                    Toasty.error(context, "Error while searching places. Please try again later", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error while searching users", e);
                 }
 

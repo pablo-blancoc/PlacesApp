@@ -26,6 +26,8 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class ProfileActivity extends AppCompatActivity {
 
     // Constants
@@ -50,6 +52,11 @@ public class ProfileActivity extends AppCompatActivity {
         // Get userId of the profile that wants to be shown
         Intent intent = getIntent();
         this.uid = intent.getStringExtra("user");
+
+        if(this.uid.isEmpty()) {
+            Toasty.error(this, "Invalid user", Toast.LENGTH_LONG, true).show();
+            finish();
+        }
 
         // Create adapter and set it
         this.places = new ArrayList<>();
@@ -141,6 +148,7 @@ public class ProfileActivity extends AppCompatActivity {
         notify.put("to", ParseUser.getCurrentUser());
         notify.put("from", this.user);
         notify.saveInBackground();
+        Toasty.info(ProfileActivity.this, "Push notifications deactivated", Toast.LENGTH_SHORT, true).show();
     }
 
     /**
@@ -158,7 +166,9 @@ public class ProfileActivity extends AppCompatActivity {
                     for (ParseObject _object : objects) {
                         _object.deleteInBackground();
                     }
+                    Toasty.info(ProfileActivity.this, "Push notifications deactivated", Toast.LENGTH_SHORT, true).show();
                 } else {
+                    Toasty.error(ProfileActivity.this, "Connection error. Check your internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error deleting notify class object", e);
                 }
             }
@@ -184,7 +194,9 @@ public class ProfileActivity extends AppCompatActivity {
                     int following = object.getInt("followingCount");
                     object.put("followingCount", following + 1);
                     object.saveInBackground();
+                    Toasty.info(ProfileActivity.this, "You now follow this user", Toast.LENGTH_SHORT, true).show();
                 } else {
+                    Toasty.error(ProfileActivity.this, "Connection error. Check your internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error saving own users counts", e);
                 }
             }
@@ -216,7 +228,9 @@ public class ProfileActivity extends AppCompatActivity {
                     int following = object.getInt("followingCount");
                     object.put("followingCount", following - 1);
                     object.saveInBackground();
+                    Toasty.info(ProfileActivity.this, "You no longer follow this user", Toast.LENGTH_SHORT, true).show();
                 } else {
+                    Toasty.error(ProfileActivity.this, "Connection error. Check your internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error saving own users counts", e);
                 }
             }
@@ -234,6 +248,7 @@ public class ProfileActivity extends AppCompatActivity {
                         _object.deleteInBackground();
                     }
                 } else {
+                    Toasty.error(ProfileActivity.this, "Connection error. Check your internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error deleting follower class object", e);
                 }
             }
@@ -258,7 +273,7 @@ public class ProfileActivity extends AppCompatActivity {
                     bindInformation();
                     getPlaces();
                 } else {
-                    Toast.makeText(ProfileActivity.this, "User not found", Toast.LENGTH_LONG).show();
+                    Toasty.error(ProfileActivity.this, "User not found.", Toast.LENGTH_LONG, true).show();
                     finish();
                 }
             }
@@ -290,6 +305,7 @@ public class ProfileActivity extends AppCompatActivity {
                         binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.primary));
                     }
                 } else {
+                    Toasty.error(ProfileActivity.this, "Connection error. Check your internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Problem searching if user follows another user", e);
                 }
             }
@@ -317,6 +333,7 @@ public class ProfileActivity extends AppCompatActivity {
                         binding.btnNotify.setImageResource(R.drawable.icon_bell);
                     }
                 } else {
+                    Toasty.error(ProfileActivity.this, "Connection error. Check your internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Problem searching if user follows another user", e);
                 }
             }
@@ -356,6 +373,7 @@ public class ProfileActivity extends AppCompatActivity {
                     binding.tvFollowersCount.setText(String.format("FOLLOWERS: %d", followerCount));
                     binding.tvFollowingCount.setText(String.format("FOLLOWING: %d", followingCount));
                 } else {
+                    Toasty.error(ProfileActivity.this, "Connection error. Check your internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error getting counts", e);
                 }
             }
@@ -376,6 +394,7 @@ public class ProfileActivity extends AppCompatActivity {
                     object.put("followingCount", _followingCount);
                     object.saveInBackground();
                 } else {
+                    Toasty.error(ProfileActivity.this, "Connection error. Check your internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error saving counts", e);
                 }
             }
@@ -389,6 +408,7 @@ public class ProfileActivity extends AppCompatActivity {
         ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
         query.whereEqualTo("user", this.user);
         query.whereEqualTo("public", true);
+        query.orderByDescending(Place.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Place>() {
             @Override
             public void done(List<Place> _places, ParseException e) {
@@ -396,6 +416,7 @@ public class ProfileActivity extends AppCompatActivity {
                     places.addAll(_places);
                     adapter.notifyDataSetChanged();
                 } else {
+                    Toasty.error(ProfileActivity.this, "Error while retrieving places. Please try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error while getting places", e);
                 }
 

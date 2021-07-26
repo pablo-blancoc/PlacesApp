@@ -49,6 +49,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import es.dmoral.toasty.Toasty;
+
 public class ProfileFragment extends Fragment {
 
     // Constants
@@ -120,10 +122,6 @@ public class ProfileFragment extends Fragment {
         return root;
     }
 
-    private void changeText(TextView view, String text) {
-        view.setText(text);
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -157,10 +155,10 @@ public class ProfileFragment extends Fragment {
                         bindInformation();
                         getPlaces();
                     } catch (NullPointerException ex) {
-                        Toast.makeText(context, "Could not retrieve information. Check internet connection", Toast.LENGTH_LONG).show();
+                        Toasty.error(context, "Error while retrieving information. Check internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     }
                 } else {
-                    Toast.makeText(context, "User not found", Toast.LENGTH_LONG).show();
+                    Toasty.error(context, "Invalid user", Toast.LENGTH_LONG, true).show();
                 }
             }
         });
@@ -200,9 +198,11 @@ public class ProfileFragment extends Fragment {
                         binding.tvFollowersCount.setText(String.format("FOLLOWERS: %d", followerCount));
                         binding.tvFollowingCount.setText(String.format("FOLLOWING: %d", followingCount));
                     } catch (NullPointerException ex) {
+                        Toasty.error(context, "Error while retrieving information. Check internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                         Log.e(TAG, "NULL POINTER EXCEPTION ON QUERY RELATIONS");
                     }
                 } else {
+                    Toasty.error(context, "Error while retrieving information. Check internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error getting counts", e);
                 }
             }
@@ -216,6 +216,7 @@ public class ProfileFragment extends Fragment {
         ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
         query.whereEqualTo("user", this.user);
         query.whereEqualTo("public", true);
+        query.orderByDescending(Place.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Place>() {
             @Override
             public void done(List<Place> _places, ParseException e) {
@@ -223,6 +224,7 @@ public class ProfileFragment extends Fragment {
                     places.addAll(_places);
                     adapter.notifyDataSetChanged();
                 } else {
+                    Toasty.error(context, "Error while retrieving information. Check internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error while getting places", e);
                 }
 
