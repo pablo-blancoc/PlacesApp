@@ -37,6 +37,8 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class PlaceDetailActivity extends AppCompatActivity {
 
     // Constants
@@ -73,7 +75,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, "Error loading map", Toast.LENGTH_SHORT).show();
+            Toasty.error(this, "Error loading map", Toast.LENGTH_LONG, true).show();
         }
     }
 
@@ -281,12 +283,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 if(e == null) {
                     place = object;
                     bindInformation();
-
-                    // Set up elements visibility
-                    binding.fabCall.setVisibility(View.INVISIBLE);
-                    binding.fabLike.setVisibility(View.INVISIBLE);
-                    binding.main.setVisibility(View.VISIBLE);
-                    binding.loading.setVisibility(View.GONE);
                     enterReveal();
                 } else {
                     Toast.makeText(PlaceDetailActivity.this, "Place not found", Toast.LENGTH_LONG).show();
@@ -294,6 +290,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Set up elements visibility
+        binding.fabCall.setVisibility(View.INVISIBLE);
+        binding.fabLike.setVisibility(View.INVISIBLE);
+        binding.main.setVisibility(View.VISIBLE);
+        binding.loading.setVisibility(View.GONE);
     }
 
     /**
