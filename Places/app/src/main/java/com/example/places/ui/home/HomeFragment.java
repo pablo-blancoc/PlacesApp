@@ -127,12 +127,13 @@ public class HomeFragment extends Fragment {
                 binding.loading.setVisibility(View.GONE);
 
                 if(e == null) {
-                    if(objects.size() == 0) {
+                    places.addAll(objects);
+                    adapter.notifyDataSetChanged();
+
+                    if(places.size() == 0) {
                         binding.tvNoResults.setVisibility(View.VISIBLE);
                         binding.rvPlaces.setVisibility(View.GONE);
                     } else {
-                        places.addAll(objects);
-                        adapter.notifyDataSetChanged();
                         binding.tvNoResults.setVisibility(View.GONE);
                         binding.rvPlaces.setVisibility(View.VISIBLE);
                     }
