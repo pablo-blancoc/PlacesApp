@@ -89,7 +89,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             try {
                 this.tvCategory.setText(String.format("CATEGORY: %s", place.getCategory().get("name")));
             } catch (NullPointerException e) {
-                Log.e("FeedAdapter", "Place: " + place.getName() + "doesn't have category", e);
+                Log.e("FeedAdapter", "Place: " + place.getName() + " doesn't have category", e);
+                this.tvCategory.setText(R.string.loading);
                 return;
             }
 
@@ -108,8 +109,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
             // Bind user's information
             ParseUser user = place.getUser();
-            this.tvUsername.setText(String.format("@%s",user.getUsername()));
-            this.tvAuthorName.setText(user.getString(User.KEY_NAME));
+            try {
+                this.tvUsername.setText(String.format("@%s",user.getUsername()));
+                this.tvAuthorName.setText(user.getString(User.KEY_NAME));
+            } catch (NullPointerException ex) {
+                this.tvUsername.setText(R.string.loading);
+                this.tvAuthorName.setText(R.string.loading);
+            }
 
             String authorImage;
             try {

@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,10 +25,12 @@ import com.example.places.adapters.FeedAdapter;
 import com.example.places.adapters.SearchResultsAdapter;
 import com.example.places.databinding.FragmentHomeBinding;
 import com.example.places.databinding.LikedFragmentBinding;
+import com.example.places.models.EndlessRecyclerViewScrollListener;
 import com.example.places.models.Place;
 import com.example.places.models.SearchResult;
 import com.example.places.ui.home.HomeViewModel;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -47,6 +51,8 @@ public class LikedFragment extends Fragment {
     private List<Place> places;
     private FeedAdapter adapter;
     private Context context;
+    private int pager;
+    EndlessRecyclerViewScrollListener scrollListener;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         likedViewModel = new ViewModelProvider(this).get(LikedViewModel.class);
@@ -57,12 +63,50 @@ public class LikedFragment extends Fragment {
         this.context = getContext();
 
         // Create and setup adapter
+        this.pager = 0;
         this.places = new ArrayList<>();
         this.adapter = new FeedAdapter(context, this.places);
         this.binding.rvPlaces.setAdapter(this.adapter);
         this.binding.rvPlaces.setLayoutManager(new LinearLayoutManager(context));
 
+        // Setup SwipeContainer and colors for loading
+        this.binding.swipeContainer.setColorSchemeResources(R.color.primary, R.color.white, R.color.black);
+        this.binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshFeed(true);
+            }
+        });
+
+        // Set up endless scrolling
+        this.scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) this.binding.rvPlaces.getLayoutManager()) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                pager++;
+                getLiked();
+            }
+        };
+        this.binding.rvPlaces.addOnScrollListener(this.scrollListener);
+
+        // Load data
+        this.refreshFeed(false);
+
         return root;
+    }
+
+    /**
+     * Gets the newest posts
+     */
+    private void refreshFeed(boolean fromSwiper) {
+        if(fromSwiper) {
+            this.pager = 0;
+            places.clear();
+            getLiked();
+            this.binding.swipeContainer.setRefreshing(false);
+        } else {
+            places.clear();
+            getLiked();
+        }
     }
 
     /**
@@ -70,26 +114,37 @@ public class LikedFragment extends Fragment {
      */
     private void getLiked() {
         binding.loading.setVisibility(View.VISIBLE);
-        List<String> ids = new ArrayList<>();
 
-        ParseQuery<ParseObject> likesQuery = ParseQuery.getQuery("Like");
-        // likesQuery.include("place");
-        likesQuery.whereEqualTo("user", ParseUser.getCurrentUser());
-        likesQuery.findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Like");
+        query.include("place");
+        query.whereEqualTo("user", ParseUser.getCurrentUser());
+        query.setLimit(3);
+        query.setSkip(this.pager * 3);
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                Log.d(TAG, String.valueOf(objects.size()));
+            public void done(List<ParseObject> likes, ParseException e) {
+
                 if(e == null) {
-                    if(objects.size() == 0) {
-                        binding.tvNoResults.setVisibility(View.VISIBLE);
-                        binding.rvPlaces.setVisibility(View.GONE);
-                        binding.loading.setVisibility(View.GONE);
-                    } else {
-                        for(int i=0; i<objects.size(); i++) {
-                            ids.add(objects.get(i).getParseObject("place").getObjectId());
-                            getPlaces(ids);
+                    for(int i=0; i<likes.size(); i++) {
+                        ParseObject object = likes.get(i).getParseObject("place");
+                        try {
+                            places.add(placeFromParseObject(object));
+                        } catch (ParseException parseException) {
+                            Log.e(TAG, "Place " + i + "not added");
+                            parseException.printStackTrace();
                         }
                     }
+                    adapter.notifyDataSetChanged();
+                    if(places.size() == 0) {
+                        binding.tvNoResults.setVisibility(View.VISIBLE);
+                        binding.rvPlaces.setVisibility(View.GONE);
+                    } else {
+                        binding.tvNoResults.setVisibility(View.GONE);
+                        binding.rvPlaces.setVisibility(View.VISIBLE);
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    binding.loading.setVisibility(View.GONE);
                 } else {
                     Toast.makeText(context, "Error getting liked", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Error getting liked", e);
@@ -105,40 +160,35 @@ public class LikedFragment extends Fragment {
         binding = null;
     }
 
-    private void getPlaces(List<String> ids) {
-        ParseQuery<Place> placesQuery = ParseQuery.getQuery(Place.class);
-        placesQuery.orderByDescending(Place.KEY_CREATED_AT);
-        placesQuery.include(Place.KEY_CATEGORY);
-        placesQuery.include(Place.KEY_USER);
-        placesQuery.whereContainedIn(Place.KEY_OBJECT_ID, ids);
-        placesQuery.findInBackground(new FindCallback<Place>() {
-            @Override
-            public void done(List<Place> _places, ParseException e) {
-                binding.loading.setVisibility(View.GONE);
+    private Place placeFromParseObject(ParseObject object) throws ParseException, NullPointerException {
+        Place place = new Place();
+        place.setObjectId(object.getObjectId());
+        place.setName(object.fetchIfNeeded().getString(Place.KEY_NAME));
+        place.setImage(object.fetchIfNeeded().getParseFile(Place.KEY_IMAGE));
 
-                if(e == null) {
-                    if(_places.size() == 0) {
-                        binding.tvNoResults.setVisibility(View.VISIBLE);
-                        binding.rvPlaces.setVisibility(View.GONE);
-                    } else {
-                        places.addAll(_places);
-                        adapter.notifyDataSetChanged();
-                        binding.tvNoResults.setVisibility(View.GONE);
-                        binding.rvPlaces.setVisibility(View.VISIBLE);
+        // Get other objects (user & category)
+        ParseQuery<ParseObject> categoryQuery = ParseQuery.getQuery("Category");
+        categoryQuery.getInBackground(
+                object.fetchIfNeeded().getParseObject(Place.KEY_CATEGORY).getObjectId(), new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        if(e == null) {
+                            place.setCategory(object);
+                        }
                     }
-                } else {
-                    Toast.makeText(context, "Error getting liked", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error getting liked", e);
-                }
-            }
-        });
-    }
+                });
 
-    @Override
-    public void onResume() {
-        super.onResume();
+        ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
+        userQuery.getInBackground(
+                object.fetchIfNeeded().getParseUser(Place.KEY_USER).getObjectId(), new GetCallback<ParseUser>() {
+                    @Override
+                    public void done(ParseUser object, ParseException e) {
+                        if(e == null) {
+                            place.setUser(object);
+                        }
+                    }
+                });
 
-        // Query liked places
-        getLiked();
+        return place;
     }
 }

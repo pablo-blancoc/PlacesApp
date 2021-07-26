@@ -39,7 +39,6 @@ public class ParseApplication extends Application {
         // Initialize Onesignal
         OneSignal.initWithContext(this);
         OneSignal.setAppId(getString(R.string.one_signal_app_id));
-        OneSignal.unsubscribeWhenNotificationsAreDisabled(true);
 
         OneSignal.setNotificationOpenedHandler(new OneSignal.OSNotificationOpenedHandler() {
                     @Override
