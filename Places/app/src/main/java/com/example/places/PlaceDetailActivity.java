@@ -75,41 +75,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Error loading map", Toast.LENGTH_SHORT).show();
         }
-
-        // Set up transitionListener
-        this.transitionListener = new Transition.TransitionListener() {
-            @Override
-            public void onTransitionStart(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                enterReveal();
-            }
-
-            @Override
-            public void onTransitionCancel(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionPause(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionResume(Transition transition) {
-
-            }
-        };
-
-        // Activate animation on enter by adding the transition listener
-        getWindow().getEnterTransition().addListener(this.transitionListener);
-
-        // Set up FABs visibility
-        this.binding.fabCall.setVisibility(View.INVISIBLE);
-        this.binding.fabLike.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -139,10 +104,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
         // create the animator for this view (the start radius is zero)
         Animator fabCall_anim = ViewAnimationUtils.createCircularReveal(binding.fabCall, fabCall_x, fabCall_y, 0, fabCall_finalRadius);
         Animator fabLike_anim = ViewAnimationUtils.createCircularReveal(binding.fabLike, fabLike_x, fabLike_y, 0, fabLike_finalRadius);
-
-        // make the view visible and start the animation
-        binding.fabCall.setVisibility(View.VISIBLE);
-        binding.fabLike.setVisibility(View.VISIBLE);
 
         // Add Listener for button animation
         fabCall_anim.addListener(new Animator.AnimatorListener() {
@@ -188,6 +149,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
             }
         });
 
+        // make the view visible and start the animation
+        binding.fabCall.setVisibility(View.VISIBLE);
+        binding.fabLike.setVisibility(View.VISIBLE);
         fabCall_anim.start();
         fabLike_anim.start();
     }
@@ -304,6 +268,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
      * @param _id: The unique objectId of the place that wants to be retrieved
      */
     private void getPlace(String _id) {
+        this.binding.main.setVisibility(View.GONE);
         this.binding.loading.setVisibility(View.VISIBLE);
 
         ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
@@ -316,6 +281,13 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 if(e == null) {
                     place = object;
                     bindInformation();
+
+                    // Set up elements visibility
+                    binding.fabCall.setVisibility(View.INVISIBLE);
+                    binding.fabLike.setVisibility(View.INVISIBLE);
+                    binding.main.setVisibility(View.VISIBLE);
+                    binding.loading.setVisibility(View.GONE);
+                    enterReveal();
                 } else {
                     Toast.makeText(PlaceDetailActivity.this, "Place not found", Toast.LENGTH_LONG).show();
                     finish();
@@ -481,9 +453,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 place.liked = !place.liked;
             }
         });
-
-
-        this.binding.loading.setVisibility(View.GONE);
     }
 
     /**
