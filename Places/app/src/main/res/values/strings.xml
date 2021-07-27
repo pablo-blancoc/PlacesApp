@@ -61,4 +61,5 @@
     <string name="close_tag">[x]</string>
     <string name="server_api_key">S0Vta5WnL435W3cma5atcWPczodY!AXU8flc9nE#Zv4^nd1xuLyDmZZ&amp;c#PRjMc**9$z2JvklH*4GQH$n4SLIl9bwUNTdzY0K6b</string>
     <string name="seems_you_don_t_follow_anyone">Seems you don\'t follow anyone</string>
+    <string name="top_recommendations_for_you">Top recommendations for you</string>
 </resources>

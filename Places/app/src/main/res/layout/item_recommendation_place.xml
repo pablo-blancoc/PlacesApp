@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rlPlace"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_margin="10dp"
+        android:layout_width="100dp"
+        android:layout_height="80dp" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_toEndOf="@id/ivImage"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        tools:text="The First Coffee Shop" />
+
+    <TextView
+        android:id="@+id/tvCategory"
+        android:layout_toEndOf="@id/ivImage"
+        android:layout_marginTop="10dp"
+        android:textColor="#555555"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_below="@id/tvName"
+        android:textAllCaps="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="CATEGORY: COFFEE" />
+
+</RelativeLayout>
