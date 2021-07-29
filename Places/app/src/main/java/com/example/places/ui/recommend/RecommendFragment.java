@@ -20,6 +20,7 @@ import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestHeaders;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.places.MainActivity;
 import com.example.places.R;
 import com.example.places.adapters.FeedAdapter;
 import com.example.places.adapters.RecommendationsAdapter;
@@ -40,8 +41,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import es.dmoral.toasty.Toasty;
 import okhttp3.Headers;
@@ -117,9 +120,29 @@ public class RecommendFragment extends Fragment {
 
             @Override
             public void onFailure(int i, Headers headers, String s, Throwable throwable) {
-                Toasty.error(context, "HTTP Error: " + s, Toasty.LENGTH_LONG, true).show();
-                Log.e(TAG, "Recommendations not received");
+                // Log the error
                 Log.e(TAG, "Call to backend server failed: " + s, throwable);
+
+                if (throwable.getClass().getName().equals(ConnectException.class.getName())) {
+                    // Connection error
+                    onToastError("Cannot connect to the server.\nTry again later.");
+                } else {
+                    // Other error
+                    onToastError("Unknown error.\nTry again later.");
+                }
+            }
+        });
+
+
+    }
+
+    private void onToastError(String text) {
+        requireActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                Toasty.error(context, text, Toasty.LENGTH_LONG, true).show();
+
+                // Stop loading spinner
+                binding.loading.setVisibility(View.GONE);
             }
         });
     }
