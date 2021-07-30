@@ -1,6 +1,7 @@
 package com.example.places;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.content.Intent;
@@ -72,12 +73,14 @@ public class ProfileActivity extends AppCompatActivity {
                 if(user.following) {
                     binding.btnFollow.setText(R.string.follow);
                     binding.btnFollow.setTextColor(getResources().getColor(R.color.white));
-                    binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.primary));
+                    binding.btnFollow.setBackgroundTintList(ContextCompat.getColorStateList(ProfileActivity.this, R.color.primary));
+                    // binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.primary));
                     unfollow();
                 } else {
                     binding.btnFollow.setText(R.string.unfollow);
                     binding.btnFollow.setTextColor(getResources().getColor(R.color.primary));
-                    binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.white));
+                    binding.btnFollow.setBackgroundTintList(ContextCompat.getColorStateList(ProfileActivity.this, R.color.white));
+                    // binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.white));
                     follow();
                 }
                 user.following = !user.following;
@@ -148,7 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
         notify.put("to", ParseUser.getCurrentUser());
         notify.put("from", this.user);
         notify.saveInBackground();
-        Toasty.info(ProfileActivity.this, "Push notifications deactivated", Toast.LENGTH_SHORT, true).show();
+        Toasty.success(ProfileActivity.this, "Push notifications activated", Toast.LENGTH_SHORT, true).show();
     }
 
     /**
@@ -194,7 +197,7 @@ public class ProfileActivity extends AppCompatActivity {
                     int following = object.getInt("followingCount");
                     object.put("followingCount", following + 1);
                     object.saveInBackground();
-                    Toasty.info(ProfileActivity.this, "You now follow this user", Toast.LENGTH_SHORT, true).show();
+                    Toasty.success(ProfileActivity.this, "You now follow this user", Toast.LENGTH_SHORT, true).show();
                 } else {
                     Toasty.error(ProfileActivity.this, "Connection error. Check your internet connection and try again later.", Toast.LENGTH_LONG, true).show();
                     Log.e(TAG, "Error saving own users counts", e);
@@ -298,11 +301,13 @@ public class ProfileActivity extends AppCompatActivity {
                     if(user.following) {
                         binding.btnFollow.setText(R.string.unfollow);
                         binding.btnFollow.setTextColor(getResources().getColor(R.color.primary));
-                        binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.white));
+                        binding.btnFollow.setBackgroundTintList(ContextCompat.getColorStateList(ProfileActivity.this, R.color.white));
+                        // binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.white));
                     } else {
                         binding.btnFollow.setText(R.string.follow);
                         binding.btnFollow.setTextColor(getResources().getColor(R.color.white));
-                        binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.primary));
+                        binding.btnFollow.setBackgroundTintList(ContextCompat.getColorStateList(ProfileActivity.this, R.color.primary));
+                        // binding.btnFollow.setBackgroundColor(getResources().getColor(R.color.primary));
                     }
                 } else {
                     Toasty.error(ProfileActivity.this, "Connection error. Check your internet connection and try again later.", Toast.LENGTH_LONG, true).show();

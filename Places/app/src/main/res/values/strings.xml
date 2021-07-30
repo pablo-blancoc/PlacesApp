@@ -38,7 +38,7 @@
     <string name="places">Places</string>
     <string name="no_results_found">No results found</string>
     <string name="follow">Follow</string>
-    <string name="unfollow">Unfollow</string>
+    <string name="unfollow">Following</string>
     <string name="followers_0">Followers: 0</string>
     <string name="example">example</string>
     <string name="category">Category: </string>
