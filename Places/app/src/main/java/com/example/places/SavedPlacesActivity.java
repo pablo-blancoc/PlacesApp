@@ -76,9 +76,6 @@ public class SavedPlacesActivity extends AppCompatActivity {
             }
         };
         this.binding.rvPlaces.addOnScrollListener(this.scrollListener);
-
-        // Load data
-        this.refreshFeed(false);
     }
 
     /**
