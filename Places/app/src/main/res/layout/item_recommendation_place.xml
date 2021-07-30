@@ -1,40 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/rlPlace"
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white">
+    android:layout_height="100dp"
+    android:backgroundTint="#F9F7F5"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="5dp"
+    xmlns:tools="http://schemas.android.com/tools" >
 
-    <ImageView
-        android:id="@+id/ivImage"
-        android:layout_margin="10dp"
-        android:layout_width="100dp"
-        android:layout_height="80dp" />
-
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_toEndOf="@id/ivImage"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="18sp"
+    <RelativeLayout
+        android:id="@+id/rlPlace"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        tools:text="The First Coffee Shop" />
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-    <TextView
-        android:id="@+id/tvCategory"
-        android:layout_toEndOf="@id/ivImage"
-        android:layout_marginTop="10dp"
-        android:textColor="#555555"
-        android:textStyle="bold"
-        android:textSize="14sp"
-        android:layout_below="@id/tvName"
-        android:textAllCaps="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="CATEGORY: COFFEE" />
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_toEndOf="@id/ivImage"
+            tools:text="Rupestre Comedor Rumano" />
+
+        <TextView
+            android:id="@+id/tvCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvName"
+            android:layout_marginTop="10dp"
+            android:paddingHorizontal="7dp"
+            android:paddingVertical="5dp"
+            android:layout_toEndOf="@id/ivImage"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/rounded_background"
+            android:backgroundTint="@color/secondary"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            tools:text="ITALIAN" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

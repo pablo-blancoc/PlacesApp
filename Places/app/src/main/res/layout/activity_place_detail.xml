@@ -16,7 +16,6 @@
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:paddingBottom="25dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -83,26 +82,17 @@
                 app:srcCompat="@drawable/icon_like" />
 
             <TextView
-                android:id="@+id/titleCategory"
+                android:id="@+id/tvCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvName"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textAllCaps="true"
-                android:text="@string/category" />
-
-            <TextView
-                android:id="@+id/tvCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:paddingHorizontal="7dp"
+                android:paddingVertical="5dp"
                 android:layout_marginHorizontal="10dp"
-                android:layout_toEndOf="@id/titleCategory"
                 android:layout_below="@id/tvName"
+                android:background="@drawable/rounded_background"
+                android:backgroundTint="@color/secondary"
                 android:textAllCaps="true"
-                android:textColor="#555555"
+                android:textColor="#ffffff"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 tools:text="Fast food" />
@@ -112,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
-                android:layout_below="@id/titleCategory"
+                android:layout_below="@id/tvCategory"
                 android:layout_marginTop="15dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -203,51 +193,44 @@
 
             <RelativeLayout
                 android:id="@+id/rlAuthor"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="25dp"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/rounded_background"
+                android:backgroundTint="@color/secondary"
+                android:paddingVertical="7dp"
+                android:paddingHorizontal="10dp"
                 android:layout_below="@id/map">
-
-                <TextView
-                    android:id="@+id/titleAuthor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="10dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textAllCaps="true"
-                    android:text="@string/published_by" />
 
                 <ImageView
                     android:id="@+id/ivAuthorImage"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="10dp"
-                    android:layout_below="@id/titleAuthor"
+                    android:layout_marginHorizontal="10dp"
                     app:srcCompat="@drawable/avatar" />
 
                 <TextView
                     android:id="@+id/tvAuthorName"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/ivAuthorImage"
-                    android:layout_marginStart="10dp"
-                    android:layout_below="@id/titleAuthor"
-                    android:textColor="@color/black"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     tools:text="Pablo Blanco" />
 
                 <TextView
                     android:id="@+id/tvAuthorUsername"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvAuthorName"
                     android:layout_toEndOf="@id/ivAuthorImage"
                     android:layout_marginStart="10dp"
+                    android:textColor="@color/white"
                     tools:text="\@pablo" />
 
             </RelativeLayout>
@@ -257,6 +240,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="25dp"
                 android:visibility="gone"
                 android:layout_below="@id/map">
 

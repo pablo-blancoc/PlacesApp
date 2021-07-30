@@ -80,7 +80,7 @@ public class RecommendationsAdapter extends RecyclerView.Adapter<Recommendations
             this.tvName.setText(place.getName());
 
             try {
-                this.tvCategory.setText(String.format("CATEGORY: %s", place.getCategory().get("name")));
+                this.tvCategory.setText(place.getCategory().get("name").toString());
             } catch (NullPointerException e) {
                 Log.e("RecommendationsAdapter", "Place: " + place.getName() + " doesn't have category", e);
                 this.tvCategory.setText(R.string.loading);
