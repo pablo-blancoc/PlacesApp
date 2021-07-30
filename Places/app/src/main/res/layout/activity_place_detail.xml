@@ -11,7 +11,7 @@
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         android:indeterminateTint="@color/primary"/>
 
     <ScrollView
@@ -21,6 +21,7 @@
 
         <RelativeLayout
             android:id="@+id/main"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".PlaceDetailActivity">

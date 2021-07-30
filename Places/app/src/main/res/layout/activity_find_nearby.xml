@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".FindNearbyActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".FindNearbyActivity">
 
     <fragment
         android:id="@+id/map"
@@ -12,66 +12,80 @@ tools:context=".FindNearbyActivity">
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/rlPlace"
-        android:layout_margin="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:visibility="gone"
-        android:background="@color/white">
+        app:cardCornerRadius="20dp"
+        app:cardElevation="5dp"
+        android:backgroundTint="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" >
 
-        <ImageView
-            android:id="@+id/ivPlaceImage"
-            android:layout_margin="10dp"
-            android:layout_width="100dp"
-            android:layout_height="80dp" />
+        <RelativeLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" >
 
-        <TextView
-            android:id="@+id/close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="1dp"
-            android:textSize="18sp"
-            android:text="@string/close_tag"/>
+            <ImageView
+                android:id="@+id/ivPlaceImage"
+                android:layout_width="130dp"
+                android:layout_height="150dp" />
 
-        <TextView
-            android:id="@+id/tvPlaceName"
-            android:layout_toEndOf="@id/ivPlaceImage"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_below="@id/close"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="The First Coffee Shop" />
+            <TextView
+                android:id="@+id/close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="1dp"
+                android:textSize="18sp"
+                android:text="@string/close_tag"/>
 
-        <TextView
-            android:id="@+id/tvPlaceCategory"
-            android:layout_toEndOf="@id/ivPlaceImage"
-            android:layout_marginTop="10dp"
-            android:textColor="#555555"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:layout_below="@id/tvPlaceName"
-            android:textAllCaps="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="CATEGORY: COFFEE" />
+            <TextView
+                android:id="@+id/tvPlaceName"
+                android:layout_toEndOf="@id/ivPlaceImage"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_below="@id/close"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="The First Coffee Shop" />
 
-        <Button
-            android:id="@+id/btnDetails"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAllCaps="true"
-            android:layout_below="@id/tvPlaceCategory"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="5dp"
-            android:textSize="12sp"
-            android:text="@string/details" />
+            <TextView
+                android:id="@+id/tvPlaceCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvPlaceName"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="7dp"
+                android:paddingVertical="5dp"
+                android:layout_toEndOf="@id/ivPlaceImage"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/rounded_background"
+                android:backgroundTint="@color/secondary"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textAllCaps="true"
+                tools:text="ITALIAN" />
 
-    </RelativeLayout>
+            <Button
+                android:id="@+id/btnDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:layout_below="@id/tvPlaceCategory"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="5dp"
+                android:textSize="12sp"
+                android:text="@string/details" />
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/tvTitle"
