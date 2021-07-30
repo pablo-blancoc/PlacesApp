@@ -87,7 +87,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             this.tvName.setText(place.getName());
 
             try {
-                this.tvCategory.setText(String.format("CATEGORY: %s", place.getCategory().get("name")));
+                this.tvCategory.setText(place.getCategory().get("name").toString());
             } catch (NullPointerException e) {
                 Log.e("FeedAdapter", "Place: " + place.getName() + " doesn't have category", e);
                 this.tvCategory.setText(R.string.loading);
