@@ -32,6 +32,7 @@
         android:layout_marginHorizontal="10dp"
         android:layout_below="@id/tvUsername"
         android:hint="@string/username"
+        android:drawableLeft="@drawable/icon_profile"
         android:layout_marginBottom="10dp" />
 
     <TextView
@@ -52,6 +53,7 @@
         android:layout_marginHorizontal="10dp"
         android:layout_below="@id/tvPassword"
         android:inputType="textPassword"
+        android:drawableLeft="@drawable/icon_key"
         android:hint="@string/password" />
 
     <Button

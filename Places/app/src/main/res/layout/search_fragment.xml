@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="?attr/actionBarSize"
+    android:paddingTop="5dp"
     android:paddingHorizontal="10dp">
 
     <EditText
@@ -12,6 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
+        android:drawableLeft="@drawable/icon_search"
+        android:drawableTint="@color/primary"
         android:layout_toStartOf="@id/btnSearch"
         android:hint="@string/search_dots" />
 
@@ -20,6 +23,8 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="@string/search"
+        android:background="@drawable/rounded_background"
+        android:backgroundTint="@color/primary"
         android:layout_alignParentEnd="true"/>
 
     <RadioGroup
