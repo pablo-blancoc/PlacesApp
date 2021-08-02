@@ -20,6 +20,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestHeaders;
+import com.codepath.asynchttpclient.RequestParams;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.places.MainActivity;
 import com.example.places.R;
 import com.example.places.adapters.SearchResultsAdapter;
@@ -36,18 +40,25 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
+import okhttp3.Headers;
 
 public class SearchFragment extends Fragment {
 
     // Constants
     private final static String TAG = "SearchFragment";
     private static final int MAX_RESULTS = 20;
+    private static final String SERVER_URL = "http://192.168.1.75:5000/";
 
     // Attributes
+    private String apiKey;
     private SearchViewModel searchViewModel;
     private SearchFragmentBinding binding;
     private boolean isSearchUsers = true;
@@ -55,8 +66,6 @@ public class SearchFragment extends Fragment {
     private SearchResultsAdapter adapter;
     private Context context;
     private String searchText;
-    private int pager;
-    EndlessRecyclerViewScrollListener scrollListener;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
@@ -64,6 +73,9 @@ public class SearchFragment extends Fragment {
         this.binding = SearchFragmentBinding.inflate(inflater, container, false);
         View root = this.binding.getRoot();
         this.context = getContext();
+
+        // Set backend apiKey
+        this.apiKey = getString(R.string.server_api_key);
 
         // Create instance of searchResults
         this.results = new ArrayList<>();
@@ -73,18 +85,6 @@ public class SearchFragment extends Fragment {
         this.binding.rvResults.setAdapter(adapter);
         this.binding.rvResults.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Set up endless scrolling
-        this.scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) this.binding.rvResults.getLayoutManager()) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                pager++;
-                search();
-            }
-        };
-
-        // Set on scrollListener
-        this.binding.rvResults.addOnScrollListener(this.scrollListener);
-
         // Search clickListener
         this.binding.btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +92,6 @@ public class SearchFragment extends Fragment {
                 results.clear();
                 adapter.notifyDataSetChanged();
                 searchText = binding.etSearch.getText().toString();
-                pager = 0;
                 search();
             }
         });
@@ -142,8 +141,6 @@ public class SearchFragment extends Fragment {
         ParseQuery<User> query = ParseQuery.getQuery(User.class);
         query.whereContains(User.KEY_NAME, this.searchText);
         query.whereNotEqualTo(User.KEY_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
-        query.setLimit(MAX_RESULTS);
-        query.setSkip(this.pager * MAX_RESULTS);
         query.findInBackground(new FindCallback<User>() {
             @Override
             public void done(List<User> users, ParseException e) {
@@ -175,30 +172,40 @@ public class SearchFragment extends Fragment {
     private void searchPlaces() {
         this.onStartLoading();
 
-        ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
-        query.whereContains(Place.KEY_NAME, this.searchText);
-        query.include("category");
-        query.whereEqualTo("public", true);
-        query.setLimit(MAX_RESULTS);
-        query.setSkip(this.pager * MAX_RESULTS);
-        query.findInBackground(new FindCallback<Place>() {
+        // Create a new instance of AsyncHttpClient
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        RequestHeaders headers = new RequestHeaders();
+        headers.put("x-api-key", this.apiKey);
+
+        RequestParams params = new RequestParams();
+        params.put("query", this.searchText);
+
+        client.get(SERVER_URL + "search", headers, params, new JsonHttpResponseHandler() {
             @Override
-            public void done(List<Place> places, ParseException e) {
-                if(e == null) {
-                    for(int i=0; i<places.size(); i++) {
-                        Place place = places.get(i);
-                        try {
-                            results.add(new SearchResult(false, place.getName(), place.getCategory().getString("name"), "", place.getObjectId()));
-                        } catch (NullPointerException ex) {
-                            Log.e(TAG, "user not added: " + i, ex);
-                        }
+            public void onSuccess(int i, Headers headers, JSON json) {
+                JSONObject object = json.jsonObject;
+                try {
+                    JSONArray placesIds = object.getJSONArray("places");
+                    for(int j=0; j<placesIds.length(); j++) {
+                        String placeId = placesIds.getString(j);
+                        ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
+                        query.include(Place.KEY_CATEGORY);
+                        Place place = query.get(placeId);
+                        results.add(new SearchResult(false, place.getName(), place.getCategory().getString("name"), "", place.getObjectId()));
                     }
-                    adapter.notifyDataSetChanged();
-                } else {
-                    Toasty.error(context, "Error while searching places. Please try again later", Toast.LENGTH_LONG, true).show();
-                    Log.e(TAG, "Error while searching users", e);
+                } catch (JSONException | ParseException e) {
+                    e.printStackTrace();
                 }
 
+                adapter.notifyDataSetChanged();
+                onStopLoading();
+            }
+
+            @Override
+            public void onFailure(int i, Headers headers, String s, Throwable throwable) {
+                Log.e(TAG, "Could not query places");
+                Log.e(TAG, "Call to backend server failed: " + s, throwable);
                 onStopLoading();
             }
         });
