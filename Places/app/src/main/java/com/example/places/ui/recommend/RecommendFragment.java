@@ -53,7 +53,7 @@ public class RecommendFragment extends Fragment {
 
     // Constants
     private static final String TAG = "RecommendFragment";
-    private static final String SERVER_URL = "http://192.168.1.75:5000/";
+    private static final String SERVER_URL = "http://192.168.1.90:5000/";
 
     // Attributes
     private String apiKey;
