@@ -63,7 +63,7 @@ This apps allows you to save restaurants, coffee-shops, and more in your own per
 
 
 ### Demo
-![[Demo video](https://github.com/pablo-blancoc/PlacesApp/blob/main/files/video_thumbnail.png)](https://www.youtube.com/watch?v=1xeu8BVRBQQ)
+[![Demo video](https://github.com/pablo-blancoc/PlacesApp/blob/main/files/video_thumbnail.png)](https://www.youtube.com/watch?v=1xeu8BVRBQQ)
 
 
 ## Product Spec
