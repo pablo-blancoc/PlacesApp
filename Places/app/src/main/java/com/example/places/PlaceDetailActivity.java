@@ -456,6 +456,31 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 place.liked = !place.liked;
             }
         });
+
+        // Promote a place
+        this.binding.btnPromote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.rlPromote.setVisibility(View.VISIBLE);
+            }
+        });
+
+        // Promotion cancelled
+        this.binding.btnPromoteCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.rlPromote.setVisibility(View.GONE);
+            }
+        });
+
+        // Promote now
+        this.binding.btnPromoteNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.rlPromote.setVisibility(View.GONE);
+                Toasty.success(PlaceDetailActivity.this, "Place promoted successfully!", Toasty.LENGTH_SHORT, true).show();
+            }
+        });
     }
 
     /**

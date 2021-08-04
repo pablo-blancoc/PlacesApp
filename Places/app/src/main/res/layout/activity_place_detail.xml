@@ -280,6 +280,76 @@
                     android:backgroundTint="@color/primary"
                     android:text="@string/delete"/>
 
+                <Button
+                    android:id="@+id/btnPromote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    android:layout_below="@id/btnPublic"
+                    android:background="@drawable/rounded_background"
+                    android:backgroundTint="@color/primary"
+                    android:text="@string/promote"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlPromote"
+                android:visibility="gone"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="#e5e4e2"
+                android:background="@drawable/rounded_background"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/promotionTitle"
+                    android:textColor="@color/secondary"
+                    android:text="@string/what_is_a_promotion"
+                    android:textStyle="bold"
+                    android:textSize="24sp"
+                    android:layout_margin="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/promotionText"
+                    android:layout_below="@id/promotionTitle"
+                    android:text="@string/promotion_description"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/btnPromoteNow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    android:layout_below="@id/promotionText"
+                    android:background="@drawable/rounded_background"
+                    android:backgroundTint="@color/primary"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/promote"/>
+
+                <Button
+                    android:id="@+id/btnPromoteCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    android:layout_below="@id/promotionText"
+                    android:layout_toStartOf="@id/btnPromoteNow"
+                    android:background="@drawable/rounded_background"
+                    android:backgroundTint="@color/primary"
+                    android:text="@string/cancel"/>
+
             </RelativeLayout>
 
         </RelativeLayout>
