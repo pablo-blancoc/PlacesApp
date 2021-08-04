@@ -97,7 +97,7 @@ public class CreatePlace extends AppCompatActivity {
     private final static String KEY_LOCATION = "location";
     private static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};
     private static final int CAMERA_REQUEST_CODE = 10;
-    private static final String SERVER_URL = "http://192.168.1.90:5000/";
+    private static final String SERVER_URL = "http://192.168.1.65:5000/";
 
     // Attributes
     private ActivityCreatePlaceBinding binding;

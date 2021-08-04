@@ -54,8 +54,7 @@ public class SearchFragment extends Fragment {
 
     // Constants
     private final static String TAG = "SearchFragment";
-    private static final int MAX_RESULTS = 20;
-    private static final String SERVER_URL = "http://192.168.1.90:5000/";
+    private static final String SERVER_URL = "http://192.168.1.65:5000/";
 
     // Attributes
     private String apiKey;
