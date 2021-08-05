@@ -66,4 +66,8 @@
     <string name="what_is_a_promotion">What is a promotion?</string>
     <string name="promotion_description">When you promote a place, our powerful backend will use the best algorithms in order to find the best users to recommend the place to. This users will see the place the next time they login into the app. Then, you will have statistics about how your promotion went.</string>
     <string name="cancel">Cancel</string>
+    <string name="paid_promotion">Paid promotion</string>
+    <string name="you_may_like">You may like:</string>
+    <string name="ignore">Ignore</string>
+    <string name="view">View</string>
 </resources>

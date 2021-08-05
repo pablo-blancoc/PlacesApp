@@ -1,12 +1,20 @@
 package com.example.places.ui.home;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +27,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.example.places.MainActivity;
+import com.example.places.PlaceDetailActivity;
 import com.example.places.R;
 import com.example.places.adapters.FeedAdapter;
 import com.example.places.databinding.FragmentHomeBinding;
@@ -56,6 +67,12 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         this.context = getContext();
+
+        // Take out foreground to start activity
+        binding.swipeContainer.getForeground().setAlpha(0);
+
+        // Present the promotions if there are any
+        this.presentPromotions();
 
         // Setup SwipeContainer and colors for loading
         this.binding.swipeContainer.setColorSchemeResources(R.color.primary, R.color.white, R.color.black);
@@ -153,4 +170,82 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    /**
+     * Checks on Parse if there are any promotions that should be shown to the user.
+     *  If so, it makes sure the user sees them and acts on them
+     */
+    private void presentPromotions() {
+
+        // Know if there is a promotion to be shown
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("PendingPromotion");
+        query.whereEqualTo("user", ParseUser.getCurrentUser());
+        query.include("promotion");
+
+        try {
+            // Get promotion if there is one
+            ParseObject pendingPromotion = query.getFirst();
+            String promotionId = pendingPromotion.getParseObject("promotion").getObjectId();
+            String placeId = pendingPromotion.getParseObject("promotion").fetchIfNeeded().getParseObject("place").getObjectId();
+
+            // If there is a place. Else there is an error getting the promotion
+            if(placeId != null) {
+                // get place passed
+                ParseQuery<Place> queryPlace = ParseQuery.getQuery(Place.class);
+                Place place = queryPlace.get(placeId);
+
+                // Setup the view
+                this.binding.promotionName.setText(place.getName());
+                Glide.with(this)
+                        .load(place.getImage().getUrl())
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.error)
+                        .centerCrop()
+                        .into(this.binding.promotionImage);
+
+                // Update the promotion's viewed attribute
+                ParseQuery<ParseObject> queryPromotion = ParseQuery.getQuery("Promotion");
+                ParseObject promotion = queryPromotion.get(promotionId);
+                promotion.increment("viewed", 1);
+                promotion.saveInBackground();
+
+                // Ignore the promotion
+                this.binding.promotionIgnore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        binding.rlPromotion.setVisibility(View.GONE);
+                        binding.swipeContainer.getForeground().setAlpha(0);
+                    }
+                });
+
+                // View the place of the promotion
+                this.binding.promotionView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        binding.rlPromotion.setVisibility(View.GONE);
+                        binding.swipeContainer.getForeground().setAlpha(0);
+
+                        // update the clicked attribute of the promotion
+                        promotion.increment("clicked", 1);
+                        promotion.saveInBackground();
+
+                        // go to the place viewed
+                        Intent intentPlace = new Intent(context, PlaceDetailActivity.class);
+                        intentPlace.putExtra("place", placeId);
+                        startActivity(intentPlace);
+                    }
+                });
+
+                binding.rlPromotion.setVisibility(View.VISIBLE);
+                binding.swipeContainer.getForeground().setAlpha(240);
+            }
+
+            // Delete gotten promotion
+            pendingPromotion.deleteInBackground();
+
+        } catch (ParseException | NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

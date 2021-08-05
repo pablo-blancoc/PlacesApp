@@ -12,12 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.places.databinding.ActivityLoginBinding;
+import com.example.places.models.Place;
 import com.example.places.models.User;
 import com.onesignal.OneSignal;
 import com.parse.LogInCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -148,10 +150,9 @@ public class LoginActivity extends AppCompatActivity {
     private void goMainActivity() {
         cleanFields();
 
+        // With finish the LoginActivity is removed from back-stack
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-
-        // With finish the LoginActivity is removed from back-stack
         finish();
     }
 
