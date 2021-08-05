@@ -292,6 +292,17 @@
                     android:backgroundTint="@color/primary"
                     android:text="@string/promote"/>
 
+                <ProgressBar
+                    android:id="@+id/loadingPromote"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    android:layout_below="@id/btnPublic"
+                    android:visibility="gone"
+                    android:indeterminateTint="@color/primary"/>
+
             </RelativeLayout>
 
             <RelativeLayout

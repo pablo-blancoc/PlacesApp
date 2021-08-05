@@ -17,8 +17,13 @@ import android.view.ViewAnimationUtils;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestHeaders;
+import com.codepath.asynchttpclient.RequestParams;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.places.databinding.ActivityPlaceDetailBinding;
 import com.example.places.models.Place;
+import com.example.places.models.SearchResult;
 import com.example.places.models.User;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,16 +41,23 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
+import okhttp3.Headers;
 
 public class PlaceDetailActivity extends AppCompatActivity {
 
     // Constants
     private final static String TAG = "PlaceDetailActivity";
+    private static final String SERVER_URL = "http://192.168.1.69:5000/";
 
     // Attributes
+    private String apiKey;
     private ActivityPlaceDetailBinding binding;
     private Place place;
     private SupportMapFragment mapFragment;
@@ -64,6 +76,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         // Get intent with objectId of the place
         Intent intent = getIntent();
         String uid = intent.getStringExtra("place");
+        this.apiKey = getString(R.string.server_api_key);
         this.getPlace(uid);
 
         // Setup map with WorkaroundFragment so that drag & move still work
@@ -478,7 +491,50 @@ public class PlaceDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 binding.rlPromote.setVisibility(View.GONE);
-                Toasty.success(PlaceDetailActivity.this, "Place promoted successfully!", Toasty.LENGTH_SHORT, true).show();
+                binding.btnPromote.setVisibility(View.GONE);
+                binding.loadingPromote.setVisibility(View.VISIBLE);
+
+                // Create a new instance of AsyncHttpClient
+                AsyncHttpClient client = new AsyncHttpClient();
+
+                RequestHeaders headers = new RequestHeaders();
+                headers.put("x-api-key", apiKey);
+
+                RequestParams params = new RequestParams();
+                params.put("place", place.getObjectId());
+                params.put("user", ParseUser.getCurrentUser().getObjectId());
+
+                client.get(SERVER_URL + "promote", headers, params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int i, Headers headers, JSON json) {
+                        onToastMessage("Place promoted successfully!", false);
+                    }
+
+                    @Override
+                    public void onFailure(int i, Headers headers, String s, Throwable throwable) {
+                        onToastMessage("Error while promoting place", true);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Sends a toast message to the user
+     * @param text: The text of the Toast
+     * @param isError: defines the type of toast ( success | error )
+     */
+    private void onToastMessage(String text, boolean isError) {
+        PlaceDetailActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                if(isError) {
+                    Toasty.error(PlaceDetailActivity.this, text, Toasty.LENGTH_LONG, true).show();
+                } else {
+                    Toasty.success(PlaceDetailActivity.this, text, Toasty.LENGTH_LONG, true).show();
+                }
+
+                binding.btnPromote.setVisibility(View.VISIBLE);
+                binding.loadingPromote.setVisibility(View.GONE);
             }
         });
     }
