@@ -70,4 +70,8 @@
     <string name="you_may_like">You may like:</string>
     <string name="ignore">Ignore</string>
     <string name="view">View</string>
+    <string name="my_promotions">My promotions</string>
+    <string name="sent">Sent</string>
+    <string name="viewed">Viewed</string>
+    <string name="clicked">Clicked</string>
 </resources>

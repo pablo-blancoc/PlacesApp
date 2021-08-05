@@ -32,6 +32,12 @@
         android:title="@string/private_places" />
 
     <item
+        android:id="@+id/promotions"
+        app:showAsAction="never"
+        android:actionLayout="@layout/activity_main"
+        android:title="@string/my_promotions" />
+
+    <item
         android:id="@+id/logout"
         app:showAsAction="never"
         android:actionLayout="@layout/activity_main"

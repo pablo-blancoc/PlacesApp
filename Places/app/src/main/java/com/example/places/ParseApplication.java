@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.example.places.models.Place;
+import com.example.places.models.Promotion;
 import com.example.places.models.User;
 import com.onesignal.OSNotificationOpenedResult;
 import com.onesignal.OneSignal;
@@ -25,6 +26,7 @@ public class ParseApplication extends Application {
         // Declare Parse subclasses
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Place.class);
+        ParseObject.registerSubclass(Promotion.class);
 
         // Initialize Parse
         Parse.initialize(new Parse.Configuration.Builder(this)

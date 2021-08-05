@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:backgroundTint="#F9F7F5"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="5dp"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginBottom="10dp"
+                tools:text="Comedor Rumano"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <TextView
+                android:id="@+id/tvSent"
+                android:layout_below="@id/tvName"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                tools:text="5"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvViewed"
+                android:layout_below="@id/tvName"
+                android:gravity="center"
+                android:layout_toEndOf="@id/tvSent"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                tools:text="5"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvClicked"
+                android:layout_below="@id/tvName"
+                android:gravity="center"
+                android:layout_toEndOf="@id/tvViewed"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                tools:text="5"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvSentText"
+                android:layout_below="@id/tvViewed"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:text="@string/sent"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvViewedText"
+                android:layout_below="@id/tvViewed"
+                android:gravity="center"
+                android:layout_toEndOf="@id/tvSent"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:text="@string/viewed"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvClickedText"
+                android:layout_below="@id/tvViewed"
+                android:gravity="center"
+                android:layout_toEndOf="@id/tvViewed"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:text="@string/clicked"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content" />
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
