@@ -53,7 +53,6 @@ public class RecommendFragment extends Fragment {
 
     // Constants
     private static final String TAG = "RecommendFragment";
-    private static final String SERVER_URL = "http://192.168.1.69:5000/";
 
     // Attributes
     private String apiKey;
@@ -62,6 +61,7 @@ public class RecommendFragment extends Fragment {
     private RecommendationsAdapter adapter;
     private RecommendViewModel recommendViewModel;
     private RecommendFragmentBinding binding;
+    private String SERVER_URL;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         recommendViewModel = new ViewModelProvider(this).get(RecommendViewModel.class);
@@ -73,6 +73,7 @@ public class RecommendFragment extends Fragment {
 
         // Set backend apiKey
         this.apiKey = getString(R.string.server_api_key);
+        this.SERVER_URL = getString(R.string.server_url);
 
         // Create and setup adapter
         this.places = new ArrayList<>();

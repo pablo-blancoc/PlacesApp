@@ -54,7 +54,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     // Constants
     private final static String TAG = "PlaceDetailActivity";
-    private static final String SERVER_URL = "http://192.168.1.69:5000/";
 
     // Attributes
     private String apiKey;
@@ -64,6 +63,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private GoogleMap map;
     private int deleteStep = 0;
     private Transition.TransitionListener transitionListener;
+    private String SERVER_URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +77,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String uid = intent.getStringExtra("place");
         this.apiKey = getString(R.string.server_api_key);
+        this.SERVER_URL = getString(R.string.server_url);
         this.getPlace(uid);
 
         // Setup map with WorkaroundFragment so that drag & move still work

@@ -97,7 +97,6 @@ public class CreatePlace extends AppCompatActivity {
     private final static String KEY_LOCATION = "location";
     private static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};
     private static final int CAMERA_REQUEST_CODE = 10;
-    private static final String SERVER_URL = "http://192.168.1.69:5000/";
 
     // Attributes
     private ActivityCreatePlaceBinding binding;
@@ -113,6 +112,7 @@ public class CreatePlace extends AppCompatActivity {
     Marker placeLocation;
     private boolean sharePost = true;
     private String apiKey;
+    private String SERVER_URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +124,7 @@ public class CreatePlace extends AppCompatActivity {
 
         // Set backend apiKey
         this.apiKey = getString(R.string.server_api_key);
+        this.SERVER_URL = getString(R.string.server_url);
 
         // Since KEY_LOCATION was found in the Bundle, we can be sure that there was a last location saved
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION) && dispatcher != null) {

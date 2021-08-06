@@ -54,7 +54,6 @@ public class SearchFragment extends Fragment {
 
     // Constants
     private final static String TAG = "SearchFragment";
-    private static final String SERVER_URL = "http://192.168.1.69:5000/";
 
     // Attributes
     private String apiKey;
@@ -65,6 +64,7 @@ public class SearchFragment extends Fragment {
     private SearchResultsAdapter adapter;
     private Context context;
     private String searchText;
+    private String SERVER_URL;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
@@ -75,6 +75,7 @@ public class SearchFragment extends Fragment {
 
         // Set backend apiKey
         this.apiKey = getString(R.string.server_api_key);
+        this.SERVER_URL = getString(R.string.server_url);
 
         // Create instance of searchResults
         this.results = new ArrayList<>();
