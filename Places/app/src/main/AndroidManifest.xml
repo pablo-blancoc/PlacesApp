@@ -40,7 +40,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Places"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PromotionsActivity"></activity>
+        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".PromotionsActivity" />
         <activity
             android:name=".FollowersActivity"
             android:configChanges="orientation"

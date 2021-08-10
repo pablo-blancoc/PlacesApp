@@ -75,4 +75,6 @@
     <string name="viewed">Viewed</string>
     <string name="clicked">Clicked</string>
     <string name="server_url">http://192.168.1.201:5000/</string>
+    <string name="send">send</string>
+    <string name="write_here">Write here..</string>
 </resources>

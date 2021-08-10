@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
 
+import com.example.places.models.Message;
 import com.example.places.models.Place;
 import com.example.places.models.Promotion;
 import com.example.places.models.User;
@@ -27,6 +28,7 @@ public class ParseApplication extends Application {
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Place.class);
         ParseObject.registerSubclass(Promotion.class);
+        ParseObject.registerSubclass(Message.class);
 
         // Initialize Parse
         Parse.initialize(new Parse.Configuration.Builder(this)

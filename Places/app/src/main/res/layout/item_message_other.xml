@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:id="@+id/rlMessage"
+        android:background="@drawable/rounded_background"
+        android:backgroundTint="#f0f0f0"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="15dp"
+        android:gravity="end"
+        android:layout_margin="10dp"
+        android:paddingHorizontal="10dp">
+
+        <TextView
+            android:id="@+id/tvUser"
+            tools:text="Pablo Blanco"
+            android:layout_marginBottom="2dp"
+            android:layout_alignParentStart="true"
+            android:gravity="start"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_below="@id/tvUser"
+            android:layout_alignParentStart="true"
+            android:gravity="start"
+            tools:text="Hola! Este es un mensaje de prueba"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

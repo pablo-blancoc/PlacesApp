@@ -65,6 +65,19 @@
         android:backgroundTint="@color/primary"
         android:src="@drawable/icon_bell" />
 
+    <ImageButton
+        android:id="@+id/btnText"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_below="@id/btnFollow"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/rounded_background"
+        android:backgroundTint="@color/primary"
+        android:src="@drawable/icon_send" />
+
     <TextView
         android:id="@+id/tvFollowersCount"
         android:layout_height="wrap_content"

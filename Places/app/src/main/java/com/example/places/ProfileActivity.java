@@ -103,6 +103,58 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        // Chats clickListener
+        this.binding.btnText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseQuery<ParseObject> ownerChat = ParseQuery.getQuery("Chat");
+                ownerChat.whereEqualTo("user01", ParseUser.getCurrentUser());
+
+                ParseQuery<ParseObject> otherChat = ParseQuery.getQuery("Chat");
+                otherChat.whereEqualTo("user02", ParseUser.getCurrentUser());
+
+                List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+                queries.add(ownerChat);
+                queries.add(otherChat);
+
+                ParseQuery<ParseObject> query = ParseQuery.or(queries);
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        if(e == null) {
+                            for(ParseObject object : objects) {
+                                if(object.getParseUser("user01").getObjectId().equals(ParseUser.getCurrentUser().getObjectId()) && object.getParseUser("user02").getObjectId().equals(user.getObjectId())) {
+                                    openChat(object.getObjectId());
+                                    return;
+                                } else if(object.getParseUser("user02").getObjectId().equals(ParseUser.getCurrentUser().getObjectId()) && object.getParseUser("user01").getObjectId().equals(user.getObjectId())) {
+                                    openChat(object.getObjectId());
+                                    return;
+                                }
+                            }
+
+                            // Create a chat if it not exists
+                            ParseObject chat = new ParseObject("Chat");
+                            chat.put("user01", ParseUser.getCurrentUser());
+                            chat.put("user02", user);
+                            chat.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if(e == null) {
+                                        openChat(chat.getObjectId());
+                                    } else {
+                                        onToastError("Error opening the chat");
+                                    }
+                                }
+                            });
+                        } else {
+                            onToastError("Error while entering the chat");
+                        }
+                    }
+                });
+
+            }
+        });
+
         // Followers clickListener
         this.binding.tvFollowersCount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +168,21 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToFollowers(-1);
+            }
+        });
+    }
+
+    private void openChat(String chatId) {
+        Intent intent = new Intent(ProfileActivity.this, ChatActivity.class);
+        intent.putExtra("user", user.getObjectId());
+        intent.putExtra("chatId", chatId);
+        startActivity(intent);
+    }
+
+    private void onToastError(String text) {
+        ProfileActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                Toasty.error(ProfileActivity.this, text, Toasty.LENGTH_LONG, true).show();
             }
         });
     }
